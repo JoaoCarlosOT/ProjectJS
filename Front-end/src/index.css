@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --title: #FFFFFF;
+    --card: #161C24;
+    --card-secondary: #17274D;
+    --card-tertiary: #0F1923;
+
+    --width-desktop: 1110px;
+
+    --background: #fff;
+    --primary: #053286;
+    --secondary: #28AC72;
+    --tertiary: #ffc703;
+
+    --border: hsl(217.2 32.6% 17.5%);
+
+    --input-bg: #161C29;
+    --input-border: #676F82;
+    --input-placeholder: #454954;
+
+    --outline: transparent;
+    --outline-border: #FFFF;
+
+    --footer-title: #FDFDFD;
+    --footer-bg: #141e26;
+
+}
+
+@layer utilities {
+    .container-desktop {
+        @apply mx-auto max-w-[1110px];
+    }
+}
