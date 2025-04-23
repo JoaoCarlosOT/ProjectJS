@@ -8,11 +8,11 @@ const app = express();
 dotenv.config();
 app.use(cors());
 app.use(express.json());
-app.use('/todos', todoRoutes)
+app.use('/', todoRoutes)
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async ()=>{
-    await sequelize.sync();
+    await sequelize.sync({force:true});
     console.log(`Servidor rodando na porta ${PORT}`);
 })
