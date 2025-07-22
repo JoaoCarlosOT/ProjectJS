@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
-import { AppContext } from '../../context/AppContext';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 type LoginFormState = {
     email: string;
@@ -10,8 +10,9 @@ type LoginFormState = {
 const Login: React.FC = () => {
     const [form, setForm] = useState<LoginFormState>({ email: '', password: '' });
     const [error, setError] = useState<string>('');
-    const { login } = useContext(AppContext);
     const navigate = useNavigate();
+
+    const { login } = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,7 +29,7 @@ const Login: React.FC = () => {
         try {
             const result = await login(form);
             console.log("Usuário logado:", result);
-            navigate("/"); // redireciona após login
+            navigate("/");
         } catch (err) {
             setError("Credenciais inválidas. Tente novamente.");
         }

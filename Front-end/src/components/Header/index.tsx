@@ -4,12 +4,15 @@ import { TiThMenu } from "react-icons/ti";
 import { IoClose } from "react-icons/io5";
 import { AppContext } from "../../context/AppContext";
 import SearchData from "../../services/SearchData";
+import useAuth from "../../hooks/useAuth";
 
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [search, setSearch] = useState<string>("");
-    const { setTodos, authenticated, setAuthenticated } = useContext(AppContext);
+    const { setTodos, authenticated } = useContext(AppContext);
+
+    const { logout } = useAuth();
 
     const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -57,10 +60,7 @@ const Header = () => {
                             <Link to="/perfil" className="hover:text-teal-400 transition-colors">Meu Perfil</Link>
                             <button
                                 type="button"
-                                onClick={() => {
-                                    localStorage.removeItem("token");
-                                    setAuthenticated(false);
-                                }}
+                                onClick={logout}
                                 className="hover:text-red-400 transition-colors"
                             >
                                 Sair
@@ -92,6 +92,15 @@ const Header = () => {
                     <Link to="/" className="hover:text-teal-400 transition-colors" onClick={() => setMenuOpen(false)}>Home</Link>
                     <Link to="/cadastrar" className="hover:text-teal-400 transition-colors" onClick={() => setMenuOpen(false)}>Cadastrar</Link>
                     <Link to="/favoritos" className="hover:text-teal-400 transition-colors" onClick={() => setMenuOpen(false)}>Favoritos</Link>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            logout();
+                            setMenuOpen(false);
+                        }}
+                        className="hover:text-teal-400 transition-colors">
+                        Sair
+                    </button>
                 </nav>
             </div>
 

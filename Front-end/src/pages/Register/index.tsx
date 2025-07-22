@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { AppContext } from '../../context/AppContext';
+import React, { useState } from 'react';
+import useAuth from '../../hooks/useAuth';
 
 type LoginUser = {
     email: string;
@@ -11,7 +11,8 @@ const Register: React.FC = () => {
     const [error, setError] = useState<string>('');
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const { register } = useContext(AppContext);
+
+    const { register } = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [e.target.name]: e.target.value });
