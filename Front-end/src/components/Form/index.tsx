@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from "axios"
 import { Todo } from '../../types/Todo'
+import api from "../../services/api";
 
 type FormProps = {
     initialData?: Todo;
@@ -23,25 +23,30 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const todos: Todo = {
-            id: initialData?.id || Math.random().toString(),
-            title,
-            description
-        };
-
         try {
-            if (isEditing) {
-                await axios.put(`http://localhost:3000/todos/${todos.id}`, todos);
+            if (isEditing && initialData?.id) {
+                await api.put(`/todos/${initialData.id}`, {
+                    title,
+                    description
+                });
+
+                alert("editado com sucesso!");
+                navigate("/");
+
             } else {
-                await axios.post("http://localhost:3000/todos", todos);
+                await api.post("/todos", {
+                    title,
+                    description
+                });
+
+                alert("Cadastrado com sucesso!");
+                navigate("/");
             }
 
-            navigate("/");
-
         } catch (error) {
-            console.log(error);
+            console.log("Erro ao cadastrar/editar todo:");
         }
-    }
+    };
 
     return (
         <form

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import { Todo } from '../../types/Todo';
 
 const TodoID = () => {
@@ -10,7 +10,7 @@ const TodoID = () => {
     useEffect(() => {
         const fetchTodo = async () => {
             try {
-                const response = await axios.get<Todo>(`http://localhost:3000/todos/${id}`);
+                const response = await api.get<Todo>(`/todos/${id}`);
                 setTodo(response.data);
             } catch (error) {
                 console.error('Erro ao buscar o TODO:', error);

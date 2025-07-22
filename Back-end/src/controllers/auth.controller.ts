@@ -20,8 +20,15 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       profileImage: file.filename,
     });
 
-    res.status(201).json({ message: 'Usuário criado', user });
+    const token = jwt.sign(
+      { id: user.getDataValue('id'), email },
+      process.env.JWT_SECRET || '',
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({ token, user });
   } catch (error) {
+    console.error("Erro ao criar usuário:", error);
     res.status(400).json({ message: 'Erro ao criar usuário' });
   }
 };

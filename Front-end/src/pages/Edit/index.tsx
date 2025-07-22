@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../services/api";
 import Form from "../../components/Form";
 import { Todo } from "../../types/Todo";
 
@@ -9,7 +9,7 @@ const Edit = () => {
     const [todo, setTodo] = useState<Todo | null>(null);
 
     useEffect(() => {
-        axios.get<Todo>(`http://localhost:3000/todos/${id}`)
+        api.get<Todo>(`/todos/${id}`)
             .then((response) => setTodo(response.data))
             .catch((error) => console.log("Erro ao carregar tarefa", error));
     }, [id]);

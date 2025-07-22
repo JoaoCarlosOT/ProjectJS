@@ -9,15 +9,22 @@ import SearchData from "../../services/SearchData";
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [search, setSearch] = useState<string>("");
-    const { setTodos } = useContext(AppContext);
+    const { setTodos, authenticated, setAuthenticated } = useContext(AppContext);
 
     const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const todos = await SearchData(search);
-        setTodos(todos);
+        try {
+            const todos = await SearchData(search);
+            console.log(todos)
+            setTodos(todos);
 
-        setSearch("");
+            setSearch("");
+
+        } catch (error) {
+            console.log("Erro ao buscar dados", error);
+        }
+
     };
 
     return (
@@ -40,10 +47,33 @@ const Header = () => {
 
 
                 <nav className="hidden md:flex flex-wrap gap-6">
-                    <Link to="/" className="hover:text-teal-400 transition-colors">Home</Link>
-                    <Link to="/cadastrar" className="hover:text-teal-400 transition-colors">Cadastrar</Link>
-                    <Link to="/favoritos" className="hover:text-teal-400 transition-colors">Favoritos</Link>
+
+
+                    {authenticated ? (
+                        <>
+                            <Link to="/" className="hover:text-teal-400 transition-colors">Home</Link>
+                            <Link to="/cadastrar" className="hover:text-teal-400 transition-colors">Cadastrar</Link>
+                            <Link to="/favoritos" className="hover:text-teal-400 transition-colors">Favoritos</Link>
+                            <Link to="/perfil" className="hover:text-teal-400 transition-colors">Meu Perfil</Link>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    localStorage.removeItem("token");
+                                    setAuthenticated(false);
+                                }}
+                                className="hover:text-red-400 transition-colors"
+                            >
+                                Sair
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" className="hover:text-teal-400 transition-colors">Sign in</Link>
+                            <Link to="/register" className="hover:text-teal-400 transition-colors">Sign up</Link>
+                        </>
+                    )}
                 </nav>
+
 
                 {/* Botão Mobile */}
                 <button

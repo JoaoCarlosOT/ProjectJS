@@ -1,20 +1,24 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios';
+import { useEffect, useContext } from 'react'
 import Todos from '../../components/Todos';
 import { Todo } from '../../types/Todo';
+import api from '../../services/api';
+import { AppContext } from '../../context/AppContext';
 
 const Home = () => {
-    const [todos, setTodos] = useState<Todo[]>([]);
+    const { todos, setTodos } = useContext(AppContext);
 
     useEffect(() => {
-        axios.get<Todo[]>("http://localhost:3000/todos")
-            .then((response) => {
+        const fetchTodos = async () => {
+            try {
+                const response = await api.get<Todo[]>('/todos');
                 setTodos(response.data);
-            })
-            .catch((error) => {
-                console.log("erro ao mostrar os dados", error);
-            });
-    }, []);
+            } catch (error) {
+                console.error('Erro ao buscar tarefas:', error);
+            }
+        };
+
+        fetchTodos();
+    }, [setTodos]);
 
     const handleDeleteTodo = (id: string) => {
         setTodos((prev: Todo[]) => prev.filter((todo) => todo.id !== id));

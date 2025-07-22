@@ -3,10 +3,10 @@ import { MdOutlineSearch } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
 import { FaHeart } from "react-icons/fa";
 import { Todo } from '../../types/Todo.ts';
-import axios from "axios";
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AppContext } from '../../context/AppContext.tsx';
+import api from "../../services/api.ts";
 
 interface Props {
     Todo: Todo;
@@ -19,15 +19,14 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     const { toggleFavorite, isFavorite } = useContext(AppContext);
     const favoritado = isFavorite(id);
 
-    const handleDelete = (id: string) => {
-        axios.delete(`http://localhost:3000/todos/${id}`)
-            .then(() => {
-                alert("Deletado com sucesso");
-                onDelete(id);
-            })
-            .catch((error) => {
-                console.log('Erro ao deletar', error);
-            });
+    const handleDelete = async (id: string) => {
+        try {
+            await api.delete(`/todos/${id}`);
+            alert("Deletado com sucesso!")
+            onDelete(id);
+        } catch (error) {
+            console.log("Erro ao deletar", error)
+        }
     };
 
     return (

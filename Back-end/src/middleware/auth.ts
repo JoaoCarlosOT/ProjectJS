@@ -19,6 +19,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     req.user = { id: decoded.id, email: decoded.email };
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Token inválido' });
+    res.status(401).json({ message: 'Token inválido',error });
+    console.log(error);
   }
 };

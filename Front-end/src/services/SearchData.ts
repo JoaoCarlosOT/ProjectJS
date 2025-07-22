@@ -3,7 +3,7 @@ import api from './api';
 
 const SearchData = async (query: string): Promise<Todo[]> => {
   try {
-    const response = await api.get<Todo[]>('/', {
+    const response = await api.get<Todo[]>('/todos/search', {
       params: { q: query }
     });
 

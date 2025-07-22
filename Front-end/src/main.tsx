@@ -9,35 +9,63 @@ import Cadastrar from './pages/Cadastrar/index.tsx'
 import Edit from './pages/Edit/index.tsx';
 import TodoID from './pages/TodoID/index.tsx';
 import Favoritos from './pages/favoritos/index.tsx';
+import ProtectedRoute from './components/protected/index.tsx';
+import Login from './pages/Login/index.tsx';
+import Register from './pages/Register/index.tsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App />, // seu layout principal
     children: [
+      // públicas
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
+
+      // protegidas
       {
         path: "/",
-        element: <Home />,
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/cadastrar",
-        element: <Cadastrar />
+        element: (
+          <ProtectedRoute>
+            <Cadastrar />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/edit/:id",
-        element: <Edit />
+        element: (
+          <ProtectedRoute>
+            <Edit />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/details/:id",
-        element: <TodoID />
+        element: (
+          <ProtectedRoute>
+            <TodoID />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/favoritos",
-        element: <Favoritos />
+        element: (
+          <ProtectedRoute>
+            <Favoritos />
+          </ProtectedRoute>
+        ),
       }
-    ]
-  }
-])
+    ],
+  },
+]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
