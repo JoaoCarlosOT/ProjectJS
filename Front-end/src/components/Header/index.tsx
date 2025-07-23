@@ -5,6 +5,7 @@ import { IoClose } from "react-icons/io5";
 import { AppContext } from "../../context/AppContext";
 import SearchData from "../../services/SearchData";
 import useAuth from "../../hooks/useAuth";
+import UserAvatarMenu from "../UserAvatarMenu";
 
 
 const Header = () => {
@@ -57,14 +58,15 @@ const Header = () => {
                             <Link to="/" className="hover:text-teal-400 transition-colors">Home</Link>
                             <Link to="/cadastrar" className="hover:text-teal-400 transition-colors">Cadastrar</Link>
                             <Link to="/favoritos" className="hover:text-teal-400 transition-colors">Favoritos</Link>
-                            <Link to="/perfil" className="hover:text-teal-400 transition-colors">Meu Perfil</Link>
-                            <button
+                            {authenticated && <UserAvatarMenu />}
+
+                            {/* <button
                                 type="button"
                                 onClick={logout}
                                 className="hover:text-red-400 transition-colors"
                             >
                                 Sair
-                            </button>
+                            </button> */}
                         </>
                     ) : (
                         <>

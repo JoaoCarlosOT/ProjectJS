@@ -114,5 +114,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const home = async (req: Request, res: Response): Promise<void> => {
-  res.json({ message: 'Você está logado!', user: req.user });
+  try {
+    const user = await User.findByPk(req.user!.id);
+
+    if (!user) {
+      res.status(404).json({ message: 'Usuário não encontrado' });
+      return;
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error("Erro no /home:", error);
+    res.status(500).json({ message: 'Erro ao buscar usuário' });
+  }
 };
