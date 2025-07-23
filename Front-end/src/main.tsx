@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import './index.css';
 import Home from './pages/Home/index.tsx'
@@ -67,8 +68,13 @@ const router = createBrowserRouter([
   },
 ]);
 
+const GOOGLE_CLIENT_ID = '379504665865-r9ff1rvj8fd27s6dn30vor47rg2kp2nr.apps.googleusercontent.com';
+
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
   </StrictMode>,
 )

@@ -27,6 +27,24 @@ export default function useAuth() {
     }
   }
 
+  async function loginWithGoogle(googleToken: string) {
+    try {
+      // Envie para o backend validar e gerar o token da sua API
+      const response = await api.post<AuthResponse>('/auth/google', {
+        token: googleToken,
+      });
+
+      const data = response.data;
+
+      localStorage.setItem("token", data.token);
+      api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+      setAuthenticated(true);
+      navigate("/");
+    } catch (error) {
+      console.error("Erro no login com Google:", error);
+    }
+  }
+
   async function login(credentials: { email: string; password: string }) {
     try {
       const response = await api.post<AuthResponse>("/login", credentials);
@@ -49,5 +67,5 @@ export default function useAuth() {
     navigate("/login");
   }
 
-  return { register, login, logout };
+  return { register,loginWithGoogle, login, logout };
 }

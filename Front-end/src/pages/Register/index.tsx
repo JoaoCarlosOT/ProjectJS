@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
+import GoogleLoginButton from '../../components/LoginGoogle';
 
 type LoginUser = {
     email: string;
@@ -107,6 +108,7 @@ const Register: React.FC = () => {
                 >
                     Registrar
                 </button>
+                <GoogleLoginButton />
             </form>
         </div>
     );
