@@ -7,7 +7,7 @@ import {
   updateTodo,
   deleteTodo
 } from '../controllers/todoController';
-import { register, login, home, loginWithGoogle } from '../controllers/auth.controller';
+import { register, login, home, loginWithGoogle,updateProfile } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth';
 import { upload } from '../middleware/upload';
 
@@ -17,6 +17,7 @@ router.post('/register', upload.single('profileImage'), register);
 router.post('/auth/google', loginWithGoogle);
 router.post('/login', login);
 router.get('/home', authenticate, home);
+router.put('/profile', authenticate, upload.single('profileImage'), updateProfile);
 
 router.get('/todos', authenticate, getAllTodo);
 router.get('/todos/search', authenticate, searchTodos);

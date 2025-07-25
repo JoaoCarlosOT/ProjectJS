@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AppContext } from '../../context/AppContext.tsx';
 import api from "../../services/api.ts";
+import { useMessage } from '../../context/FlashMessageContext';
 
 interface Props {
     Todo: Todo;
@@ -17,15 +18,17 @@ interface Props {
 const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     const { id, title, description } = Todo;
     const { toggleFavorite, isFavorite } = useContext(AppContext);
+    const { setMessage } = useMessage();
     const favoritado = isFavorite(id);
 
     const handleDelete = async (id: string) => {
         try {
-            await api.delete(`/todos/${id}`);
-            alert("Deletado com sucesso!")
+            const res = await api.delete(`/todos/${id}`);
+            setMessage({ type: "success", text: res.data.message || "Deletado com sucesso!" });
             onDelete(id);
-        } catch (error) {
-            console.log("Erro ao deletar", error)
+        } catch (error: any) {
+            const msg = error.response?.data?.message || "Erro ao deletar";
+            setMessage({ type: "error", text: msg });
         }
     };
 
@@ -53,13 +56,12 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
                     className={`m-auto cursor-pointer transition ${favoritado ? 'text-red-600' : 'text-gray-400'}`}
                     onClick={() => {
                         toggleFavorite(Todo);
-                        alert("favoritado com sucesso!!!")
+                        setMessage({ type: "success", text: favoritado ? "Removido dos favoritos!" : "Adicionado aos favoritos!" });
                     }}
                 />
             </td>
         </>
     );
 };
-
 
 export default Todos;

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import GoogleLoginButton from '../../components/LoginGoogle';
+import { useMessage } from '../../context/FlashMessageContext';
+import { MessageResponse } from '../../types/MessageResponse';
 
 type LoginUser = {
     email: string;
@@ -9,11 +11,11 @@ type LoginUser = {
 
 const Register: React.FC = () => {
     const [user, setUser] = useState<LoginUser>({ email: '', password: '' });
-    const [error, setError] = useState<string>('');
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     const { register } = useAuth();
+    const { setMessage } = useMessage();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser({ ...user, [e.target.name]: e.target.value });
@@ -31,11 +33,9 @@ const Register: React.FC = () => {
         e.preventDefault();
 
         if (!user.email || !user.password || !profileImage) {
-            setError('Preencha todos os campos e selecione uma imagem.');
+            setMessage({ type: 'error', text: 'Preencha todos os campos e selecione uma imagem.' });
             return;
         }
-
-        setError('');
 
         const formData = new FormData();
         formData.append('email', user.email);
@@ -43,10 +43,11 @@ const Register: React.FC = () => {
         formData.append('profileImage', profileImage);
 
         try {
-            const result = await register(formData);
-            console.log("Usuário registrado com sucesso:", result);
+            const res = await register(formData);
+            const msg = res.data.message || "Registrado com sucesso";
+            setMessage({ type: 'success', text: msg });
         } catch (error) {
-            setError('Erro ao registrar. Verifique os dados e tente novamente.');
+            setMessage({ type: 'error', text: 'Erro ao registrar. Verifique os dados e tente novamente.' });
         }
     };
 
@@ -58,8 +59,6 @@ const Register: React.FC = () => {
                 encType="multipart/form-data"
             >
                 <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-
-                {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import { useMessage } from '../../context/FlashMessageContext';
+import { MessageResponse } from '../../types/MessageResponse';
 
 type LoginFormState = {
     email: string;
@@ -9,10 +11,10 @@ type LoginFormState = {
 
 const Login: React.FC = () => {
     const [form, setForm] = useState<LoginFormState>({ email: '', password: '' });
-    const [error, setError] = useState<string>('');
     const navigate = useNavigate();
 
     const { login } = useAuth();
+    const { setMessage } = useMessage();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,16 +24,18 @@ const Login: React.FC = () => {
         e.preventDefault();
 
         if (!form.email || !form.password) {
-            setError('Preencha todos os campos.');
+            setMessage({ type: 'error', text: 'Preencha todos os campos.' });
             return;
         }
 
         try {
-            const result = await login(form);
-            console.log("Usuário logado:", result);
-            navigate("/");
-        } catch (err) {
-            setError("Credenciais inválidas. Tente novamente.");
+            const res = await login(form);
+            // const msg = res.data.message || "Logado com sucesso"
+            setMessage({ type: 'success', text: "Logado com sucesso!" });
+            navigate('/');
+        } catch (error) {
+            setMessage({ type: 'error', text: "Erro ao logar!" });
+            console.log(error);
         }
     };
 
@@ -39,8 +43,6 @@ const Login: React.FC = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-80">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-
-                {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>

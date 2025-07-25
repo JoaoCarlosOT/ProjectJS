@@ -1,20 +1,20 @@
-import { Outlet } from 'react-router-dom'
-import './App.css'
-import Header from './components/Header'
-import { AppProvider } from './context/AppContext';
-// import Message from './components/Message';
-
+// App.tsx
+import { Outlet } from "react-router-dom";
+import Header from "./components/Header";
+import Message from "./components/Message";
+import { AppProvider } from "./context/AppContext";
+import { MessageProvider } from "./context/FlashMessageContext";
 
 function App() {
   return (
-    <div>
-      <AppProvider>
+    <AppProvider>
+      <MessageProvider>
         <Header />
-        {/* <Message /> */}
+        <Message />
         <Outlet />
-      </AppProvider>
-    </div>
-  )
+      </MessageProvider>
+    </AppProvider>
+  );
 }
 
-export default App
+export default App;

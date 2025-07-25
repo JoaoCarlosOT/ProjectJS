@@ -128,3 +128,28 @@ export const home = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: 'Erro ao buscar usuário' });
   }
 };
+
+export const updateProfile = async (req: Request, res: Response): Promise<void> => {
+  const userId = (req.user as any).id;
+  const { name } = req.body;
+  const file = req.file;
+
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      res.status(404).json({ message: 'Usuário não encontrado' });
+      return;
+    }
+
+    if (name) user.name = name;
+    if (file) user.profileImage = file.filename;
+
+    await user.save();
+
+    res.json({ message: 'Perfil atualizado com sucesso', user });
+  } catch (error) {
+    console.error('Erro ao atualizar perfil:', error);
+    res.status(500).json({ message: 'Erro ao atualizar perfil' });
+  }
+};

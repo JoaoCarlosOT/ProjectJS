@@ -24,19 +24,29 @@ const UserAvatarMenu = () => {
             />
 
             {open && (
-                <div className="absolute right-0 mt-2 w-48 bg-gray-700 border rounded shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-50 bg-gray-800 border rounded shadow-lg z-50">
                     <div className="p-4">
                         <p className="font-semibold">{user.email}</p>
                     </div>
                     <hr />
-                    <Link to="/perfil" className="block px-4 py-2 hover:bg-gray-100">
+                    <Link to={`/EditProfile`} className="block px-4 py-2 text-white hover:bg-slate-700">
                         Editar Perfil
                     </Link>
                     <button
-                        onClick={logout}
-                        className="block w-full text-left px-4 py-2 text-blue-600 hover:bg-white"
+                        className="block w-full text-left px-4 py-2 text-white hover:bg-slate-700"
                     >
-                        Sair
+                        tema
+                    </button>
+                    <button
+                        className="block w-full text-left px-4 py-2 text-white hover:bg-slate-700"
+                    >
+                        Atalhos
+                    </button>
+                    <button
+                        onClick={logout}
+                        className="block w-full text-left px-4 py-2 text-white hover:bg-slate-700"
+                    >
+                        Fazer logout
                     </button>
                 </div>
             )}

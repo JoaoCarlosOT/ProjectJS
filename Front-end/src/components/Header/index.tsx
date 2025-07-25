@@ -32,7 +32,7 @@ const Header = () => {
     };
 
     return (
-        <header className="flex items-center justify-between px-8 py-4 bg-primary text-white shadow-md w-full relative">
+        <header className="flex items-center justify-between px-1 py-4 bg-primary text-white shadow-md w-full relative">
             <div className="flex items-center justify-between container-desktop w-full">
                 <img src="/logodark.png" alt="Logo" className="w-12 h-12" />
 
@@ -55,23 +55,16 @@ const Header = () => {
 
                     {authenticated ? (
                         <>
-                            <Link to="/" className="hover:text-teal-400 transition-colors">Home</Link>
-                            <Link to="/cadastrar" className="hover:text-teal-400 transition-colors">Cadastrar</Link>
-                            <Link to="/favoritos" className="hover:text-teal-400 transition-colors">Favoritos</Link>
+                            <Link to="/" className=" transition-colors">Home</Link>
+                            <Link to="/cadastrar" className=" transition-colors">Cadastrar</Link>
+                            <Link to="/favoritos" className=" transition-colors">Favoritos</Link>
                             {authenticated && <UserAvatarMenu />}
 
-                            {/* <button
-                                type="button"
-                                onClick={logout}
-                                className="hover:text-red-400 transition-colors"
-                            >
-                                Sair
-                            </button> */}
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="hover:text-teal-400 transition-colors">Sign in</Link>
-                            <Link to="/register" className="hover:text-teal-400 transition-colors">Sign up</Link>
+                            <Link to="/login" className=" transition-colors">Sign in</Link>
+                            <Link to="/register" className=" transition-colors">Sign up</Link>
                         </>
                     )}
                 </nav>
@@ -91,16 +84,16 @@ const Header = () => {
                     <IoClose size={24} />
                 </button>
                 <nav className="flex flex-col gap-4">
-                    <Link to="/" className="hover:text-teal-400 transition-colors" onClick={() => setMenuOpen(false)}>Home</Link>
-                    <Link to="/cadastrar" className="hover:text-teal-400 transition-colors" onClick={() => setMenuOpen(false)}>Cadastrar</Link>
-                    <Link to="/favoritos" className="hover:text-teal-400 transition-colors" onClick={() => setMenuOpen(false)}>Favoritos</Link>
+                    <Link to="/" className=" transition-colors" onClick={() => setMenuOpen(false)}>Home</Link>
+                    <Link to="/cadastrar" className=" transition-colors" onClick={() => setMenuOpen(false)}>Cadastrar</Link>
+                    <Link to="/favoritos" className=" transition-colors" onClick={() => setMenuOpen(false)}>Favoritos</Link>
                     <button
                         type="button"
                         onClick={() => {
                             logout();
                             setMenuOpen(false);
                         }}
-                        className="hover:text-teal-400 transition-colors">
+                        className=" transition-colors">
                         Sair
                     </button>
                 </nav>

@@ -1,37 +1,24 @@
-// import { useState, useEffect } from 'react';
-// import bus from '../../services/bus';
-// import styles from './message.module.css';
+// components/Message.tsx
+import { useMessage } from "../../context/FlashMessageContext";
 
-// const Message = () => {
-//     const [visible, setVisible] = useState(false);
-//     const [type, setType] = useState<'success' | 'error' | 'info'>('info');
-//     const [message, setMessage] = useState('');
+const Message = () => {
+    const { message, setMessage } = useMessage();
 
-//     useEffect(() => {
-//         const handler = (event: Event) => {
-//             const customEvent = event as CustomEvent<{ message: string; type: 'success' | 'error' | 'info' }>;
-//             setVisible(true);
-//             setMessage(customEvent.detail.message);
-//             setType(customEvent.detail.type);
+    if (!message) return null;
 
-//             setTimeout(() => {
-//                 setVisible(false);
-//             }, 3000);
-//         };
+    setTimeout(() => setMessage(null), 4000);
 
-//         bus.addEventListener('flash', handler);
-//         return () => bus.removeEventListener('flash', handler);
-//     }, []);
+    return (
+        <div
+            className={`
+        fixed bottom-6 left-10 px-4 py-2 rounded shadow 
+        bg-gray-800 
+        ${message.type === "success" ? "text-green-400" : "text-red-400"}
+      `}
+        >
+            {message.text}
+        </div>
+    );
+};
 
-//     return (
-//         <>
-//             {visible && (
-//                 <p className={`${styles.message} ${styles[type] || ''}`}>
-//                     {message}
-//                 </p>
-//             )}
-//         </>
-//     );
-// };
-
-// export default Message;
+export default Message;

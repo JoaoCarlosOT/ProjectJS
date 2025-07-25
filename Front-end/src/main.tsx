@@ -13,6 +13,7 @@ import Favoritos from './pages/favoritos/index.tsx';
 import ProtectedRoute from './components/protected/index.tsx';
 import Login from './pages/Login/index.tsx';
 import Register from './pages/Register/index.tsx';
+import EditProfile from './components/EditProfile/index.tsx';
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,16 @@ const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
 
+
       // protegidas
+      {
+        path: "/EditProfile",
+        element: (
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "/",
         element: (
@@ -68,12 +78,12 @@ const router = createBrowserRouter([
   },
 ]);
 
-const GOOGLE_CLIENT_ID = '379504665865-r9ff1rvj8fd27s6dn30vor47rg2kp2nr.apps.googleusercontent.com';
+const GOOGLE_CLIENT_id = import.meta.env.GOOGLE_CLIENT_ID;
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_id}>
       <RouterProvider router={router} />
     </GoogleOAuthProvider>
   </StrictMode>,
