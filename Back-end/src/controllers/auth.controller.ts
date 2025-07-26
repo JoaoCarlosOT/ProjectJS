@@ -3,6 +3,7 @@ import { User } from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
+import { sendWelcomeEmail } from '../services/sendEmail';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -22,6 +23,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       password: hash,
       profileImage: file.filename,
     });
+
+    if (user) {
+     sendWelcomeEmail(email).catch((err) => {
+     console.error("Erro ao enviar e-mail de boas-vindas:", err);
+    });
+}
 
     const token = jwt.sign(
       { id: user.getDataValue('id'), email },
@@ -72,6 +79,12 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
         profileImage: picture,
         name,
       });
+      
+      if (user) {
+        sendWelcomeEmail(email).catch((err) => {
+        console.error("Erro ao enviar e-mail de boas-vindas:", err);
+      });
+}
     }
 
     // Gera token da sua API
