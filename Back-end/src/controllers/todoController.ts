@@ -36,23 +36,44 @@ export const getTodoById = async (req: Request, res: Response): Promise<void> =>
   todo ? res.json(todo) : res.status(404).json({ message: 'Todo não encontrado' });
 };
 
-export const createTodo = async (req: Request, res: Response): Promise<void> => {
-  const userId = (req.user as any).id;
-  const { title, description } = req.body;
-  const todo = await Todo.create({ title, description, userId });
-  res.status(201).json(todo);
+export const createTodo = async (req: Request, res: Response) => {
+  try {
+    const { title, description } = req.body;
+    const userId = (req.user as any).id;
+
+    const filePath = req.file ? `/uploads/todo/${req.file.filename}` : null;
+
+    const todo = await Todo.create({
+      title,
+      description,
+      userId,
+      imageUrl: filePath,
+    });
+
+    res.status(201).json(todo);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao criar tarefa.' });
+  }
 };
 
-export const updateTodo = async (req: Request, res: Response): Promise<void> => {
-  const userId = (req.user as any).id;
-  const { id } = req.params;
-  const { title, description } = req.body;
-  const todo = await Todo.findOne({ where: { id, userId } });
-  if (todo) {
-    await todo.update({ title, description });
-    res.json({ message: 'Atualizado com sucesso' });
-  } else {
-    res.status(404).json({ message: 'Todo não encontrado' });
+export const updateTodo = async (req: Request, res: Response):Promise<void> => {
+  try {
+    const { title, description } = req.body;
+    const todo = await Todo.findByPk(req.params.id);
+
+    if (!todo) return res.status(404).json({ message: 'Tarefa não encontrada' });
+
+    if (title) todo.title = title;
+    if (description) todo.description = description;
+
+    if (req.file) {
+      todo.imageUrl = `/uploads/todo/${req.file.filename}`;
+    }
+
+    await todo.save();
+    res.json(todo);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao atualizar tarefa.' });
   }
 };
 

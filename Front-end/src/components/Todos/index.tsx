@@ -16,10 +16,14 @@ interface Props {
 }
 
 const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
-    const { id, title, description } = Todo;
+    const { id, title, description, imageUrl } = Todo;
     const { toggleFavorite, isFavorite } = useContext(AppContext);
     const { setMessage } = useMessage();
     const favoritado = isFavorite(id);
+
+    const finalImageUrl = imageUrl?.startsWith("http")
+        ? imageUrl
+        : `${import.meta.env.VITE_API_URL}${imageUrl}`;
 
     const handleDelete = async (id: string) => {
         try {
@@ -34,6 +38,15 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
 
     return (
         <>
+            <td className="p-3 text-center">
+                {imageUrl && (
+                    <img
+                        src={finalImageUrl}
+                        alt="Todo"
+                        className="w-16 h-16 object-cover rounded-md mx-auto"
+                    />
+                )}
+            </td>
             <td className="p-3 text-center">{title}</td>
             <td className="p-3 text-center">{description}</td>
 

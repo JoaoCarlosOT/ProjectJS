@@ -22,8 +22,10 @@ router.put('/profile', authenticate, upload.single('profileImage'), updateProfil
 router.get('/todos', authenticate, getAllTodo);
 router.get('/todos/search', authenticate, searchTodos);
 router.get('/todos/:id', authenticate, getTodoById);
-router.post('/todos', authenticate, createTodo);
-router.put('/todos/:id', authenticate, updateTodo);
+// router.post('/todos', authenticate, createTodo);
+// router.put('/todos/:id', authenticate, updateTodo);
+router.post('/todos', authenticate, upload.single('file'), createTodo);
+router.put('/todos/:id', authenticate, upload.single('file'), updateTodo);
 router.delete('/todos/:id', authenticate, deleteTodo);
 
 export default router;

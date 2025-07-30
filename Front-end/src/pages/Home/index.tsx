@@ -32,6 +32,7 @@ const Home = () => {
             <table className="w-full border border-gray-300 rounded-xl overflow-hidden shadow-sm">
                 <thead className="bg-blue-600 text-white">
                     <tr>
+                        <th className="p-3 text-center">Imagem</th>
                         <th className="p-3 text-center">Título</th>
                         <th className="p-3 text-center">Descrição</th>
                         <th className="p-3 text-center">Deletar</th>

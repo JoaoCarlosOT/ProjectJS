@@ -10,7 +10,7 @@ const UserAvatarMenu = () => {
 
     const imageUrl = user?.profileImage?.startsWith("http")
         ? user.profileImage
-        : `${import.meta.env.VITE_API_URL}/uploads/${user?.profileImage}`;
+        : `${import.meta.env.VITE_API_URL}/uploads/user/${user?.profileImage}`;
 
     if (!user) return null;
 
