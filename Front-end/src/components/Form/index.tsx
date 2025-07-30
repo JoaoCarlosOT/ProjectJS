@@ -22,9 +22,12 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
             setTitle(initialData.title);
             setDescription(initialData.description);
 
-            // Se estiver editando e já houver imagem salva, mostra ela como preview inicial
             if (initialData.imageUrl) {
-                setPreviewUrl(initialData.imageUrl); // Precisa ter esse campo no seu `Todo`
+                const isFullUrl = initialData.imageUrl.startsWith("http");
+                const fullUrl = isFullUrl
+                    ? initialData.imageUrl
+                    : `${import.meta.env.VITE_API_URL}${initialData.imageUrl}`;
+                setPreviewUrl(fullUrl);
             }
         }
     }, [initialData]);
@@ -33,7 +36,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
         if (file) {
             const objectUrl = URL.createObjectURL(file);
             setPreviewUrl(objectUrl);
-            return () => URL.revokeObjectURL(objectUrl); // Limpeza para evitar vazamento de memória
+            return () => URL.revokeObjectURL(objectUrl);
         }
     }, [file]);
 
@@ -100,8 +103,6 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
                     onChange={(e) => setFile(e.target.files?.[0] || null)}
                     className="px-4 py-2 border border-gray-300 rounded-lg"
                 />
-
-                {/* Preview da imagem */}
                 {previewUrl && (
                     <img
                         src={previewUrl}
@@ -121,3 +122,4 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
 };
 
 export default Form;
+
