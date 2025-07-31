@@ -1,4 +1,3 @@
-// pages/EditProfile.tsx
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import api from '../../services/api';

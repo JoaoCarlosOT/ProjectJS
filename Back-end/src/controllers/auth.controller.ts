@@ -68,11 +68,9 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
     const name = payload.name || '';
     const picture = payload.picture || '';
 
-    // Verificar se o usuário já existe
     let user = await User.findOne({ where: { email } });
 
     if (!user) {
-      // Cria o usuário se não existir
       user = await User.create({
         email,
         password: '', // senha vazia, pois não é usada
