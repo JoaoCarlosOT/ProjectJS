@@ -73,7 +73,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
 
     return (
         <form
-            className="max-w-md w-full mx-auto mt-32 p-6 bg-white rounded-2xl shadow-md space-y-4"
+            className="max-w-md w-full mx-auto mt-20 p-6 bg-white rounded-2xl shadow-md space-y-4"
             onSubmit={handleSubmit}
             encType="multipart/form-data"
         >

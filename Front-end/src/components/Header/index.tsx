@@ -52,8 +52,6 @@ const Header = () => {
                 <nav className="hidden md:flex items-center gap-6">
                     {authenticated ? (
                         <>
-                            {/* <Link to="/" className="h-10 flex items-center transition-colors">Home</Link>
-                            <Link to="/favoritos" className="h-10 flex items-center transition-colors">Favoritos</Link> */}
                             <UserAvatarMenu />
                         </>
                     ) : (
