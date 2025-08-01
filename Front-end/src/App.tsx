@@ -11,20 +11,17 @@ function App() {
     <AppProvider>
       <ThemeProvider>
         <MessageProvider>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <div className="flex flex-col flex-1">
-              <Header />
-              <main className="flex-1 p-4">
-                <Message />
-                <Outlet />
-              </main>
-            </div>
+          <div className="lg:pl-[260px] min-h-screen overflow-y-auto h-[calc(100vh-64px)]"> {/* espaço da sidebar */}
+            <Header />
+            <Message />
+            <Outlet />
           </div>
+          <Sidebar /> {/* fora do container principal */}
         </MessageProvider>
       </ThemeProvider>
     </AppProvider>
   );
 }
+
 
 export default App;

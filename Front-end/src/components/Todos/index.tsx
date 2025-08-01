@@ -43,7 +43,7 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
             )}
 
             <div className="p-4 space-y-2">
-                <h2 className="text-lg font-semibold text-blue-700">{title}</h2>
+                <h2 className="text-lg font-bold text-texto">{title}</h2>
                 <p className="text-gray-600 text-sm">{description}</p>
 
                 {mostrarAcoes && (

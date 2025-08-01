@@ -3,6 +3,7 @@ import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { useTheme } from '../../context/ThemeContext';
+import { IoIosArrowDown } from "react-icons/io";
 
 const UserAvatarMenu = () => {
     const { user } = useContext(AppContext);
@@ -19,15 +20,25 @@ const UserAvatarMenu = () => {
 
     return (
         <div className="relative">
-            <img
-                src={imageUrl || "/default-avatar.png"}
-                alt="avatar"
-                className="w-10 h-10 rounded-full cursor-pointer border"
+            <div
+                className='flex items-center justify-center gap-2 cursor-pointer'
                 onClick={() => {
                     setOpen(prev => !prev);
-                    setThemeMenuOpen(false); // fecha o menu de tema se o principal for reaberto
+                    setThemeMenuOpen(false);
                 }}
-            />
+            >
+
+                <div className='flex items-center gap-2'>
+                    <img
+                        src={imageUrl || "/default-avatar.png"}
+                        alt="avatar"
+                        className="w-10 h-10 rounded-full border"
+                    />
+                    <p className="text-md font-bold text-gray-600">{user.name}</p>
+                </div>
+                <IoIosArrowDown className="text-sd ml-2" />
+
+            </div>
 
             {open && (
                 <div className="absolute right-0 mt-2 w-56 bg-slate-400  border rounded shadow-lg z-50">

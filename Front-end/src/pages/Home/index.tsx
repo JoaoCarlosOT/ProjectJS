@@ -4,6 +4,7 @@ import { Todo } from '../../types/Todo';
 import api from '../../services/api';
 import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
+import { IoFilter, IoAddOutline } from "react-icons/io5";
 
 const Home = () => {
     const { todos, setTodos } = useContext(AppContext);
@@ -31,8 +32,14 @@ const Home = () => {
             <div className='flex items-center justify-between mb-8'>
                 <h1 className="text-3xl text-texto font-bold text-center">Minhas Tarefas</h1>
                 <div className='flex flex-row gap-1'>
-                    <Link to="" className="w-[130px] h-[40px] bg-slate-400 flex items-center justify-center rounded-2xl text-white font-semibold">filtrar</Link>
-                    <Link to="/cadastrar" className="w-[130px] h-[40px] bg-button flex items-center justify-center rounded-2xl text-white font-semibold">Cadastrar</Link>
+                    <Link to="" className="w-[130px] h-[40px] bg-card flex items-center justify-center rounded-2xl text-texto font-semibold gap-2 border-[2px]">
+                        <IoFilter className='text-[22px]' />
+                        Filter
+                    </Link>
+                    <Link to="/cadastrar" className="w-[130px] h-[40px] bg-button flex items-center justify-center rounded-2xl text-white font-semibold gap-2">
+                        <IoAddOutline className='text-[22px] font-bold' />
+                        New Task
+                    </Link>
                 </div>
             </div>
 

@@ -8,7 +8,7 @@ import { sendWelcomeEmail } from '../services/sendEmail';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const register = async (req: Request, res: Response): Promise<void> => {
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
   const file = req.file;
 
   if (!file) {
@@ -19,6 +19,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({
+      name,
       email,
       password: hash,
       profileImage: file.filename,

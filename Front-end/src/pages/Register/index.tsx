@@ -5,13 +5,14 @@ import { useMessage } from '../../context/FlashMessageContext';
 import { MessageResponse } from '../../types/MessageResponse';
 import { Link } from 'react-router-dom';
 
-type LoginUser = {
+interface RegisterUser {
+    name: string;
     email: string;
     password: string;
 };
 
 const Register: React.FC = () => {
-    const [user, setUser] = useState<LoginUser>({ email: '', password: '' });
+    const [user, setUser] = useState<RegisterUser>({ email: '', password: '', name: '' });
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -33,12 +34,13 @@ const Register: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!user.email || !user.password || !profileImage) {
+        if (!user.name || !user.email || !user.password || !profileImage) {
             setMessage({ type: 'error', text: 'Preencha todos os campos e selecione uma imagem.' });
             return;
         }
 
         const formData = new FormData();
+        formData.append('name', user.name);
         formData.append('email', user.email);
         formData.append('password', user.password);
         formData.append('profileImage', profileImage);
@@ -54,7 +56,6 @@ const Register: React.FC = () => {
 
     return (
         <div className="flex h-screen">
-            {/* Lado da imagem */}
             <div
                 className="hidden md:flex w-1/2 bg-cover bg-center"
                 style={{ backgroundImage: "url('/mountain.jpg')" }}
@@ -65,7 +66,6 @@ const Register: React.FC = () => {
                 </div>
             </div>
 
-            {/* Lado do formulário */}
             <div className="flex w-full md:w-1/2 justify-center items-center bg-white">
                 <form
                     onSubmit={handleSubmit}
@@ -73,6 +73,18 @@ const Register: React.FC = () => {
                     encType="multipart/form-data"
                 >
                     <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-semibold mb-2">Nome</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={user.name}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
+                            placeholder="Digite seu nome"
+                        />
+                    </div>
 
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
