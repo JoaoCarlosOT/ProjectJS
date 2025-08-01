@@ -3,4 +3,5 @@ export interface Todo {
     title: string;
     description: string;
     imageUrl?: string;
+    status: "a_fazer" | "em_progresso" | "finalizado";
 }

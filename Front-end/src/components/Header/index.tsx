@@ -42,7 +42,7 @@ const Header = () => {
                     <input
                         type="text"
                         id="search"
-                        className="w-full pl-10 pr-4 py-2 rounded-lg border-[2px] border-gray-400 text-gray-800 focus:outline-none"
+                        className="w-full max-w-[500px] pl-10 pr-4 py-2 rounded-lg border-[2px] border-gray-400 text-gray-800 focus:outline-none"
                         placeholder="Pesquisar"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}

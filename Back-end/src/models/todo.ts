@@ -26,9 +26,9 @@ export const Todo = sequelize.define('Todo', {
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM('pendente', 'em andamento', 'concluído'),
+    type: DataTypes.ENUM('a_fazer', 'em_progresso', 'finalizado'),
     allowNull: false,
-    defaultValue: 'pendente',
+    defaultValue: 'a_fazer',
   },
 });
 

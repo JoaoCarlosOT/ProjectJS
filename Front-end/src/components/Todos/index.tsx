@@ -1,5 +1,4 @@
 import { RiDeleteBin7Fill } from "react-icons/ri";
-import { MdOutlineSearch } from "react-icons/md";
 import { LuPencil } from "react-icons/lu";
 import { FaHeart } from "react-icons/fa";
 import { Todo } from '../../types/Todo.ts';
@@ -16,7 +15,7 @@ interface Props {
 }
 
 const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
-    const { id, title, description, imageUrl } = Todo;
+    const { id, title, imageUrl, status } = Todo;
     const { toggleFavorite, isFavorite } = useContext(AppContext);
     const { setMessage } = useMessage();
     const favoritado = isFavorite(id);
@@ -37,33 +36,57 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition">
-            {finalImageUrl && (
-                <img src={finalImageUrl} alt={title} className="w-full h-80 object-cover" />
-            )}
-
-            <div className="p-4 space-y-2">
-                <h2 className="text-lg font-bold text-texto">{title}</h2>
-                <p className="text-gray-600 text-sm">{description}</p>
-
-                {mostrarAcoes && (
-                    <div className="flex justify-between items-center mt-4 text-xl">
-                        <RiDeleteBin7Fill className="text-blue-700 cursor-pointer" onClick={() => handleDelete(id)} />
-                        <Link to={`/edit/${id}`}><LuPencil className="text-yellow-500 cursor-pointer" /></Link>
-                        <Link to={`/details/${id}`}><MdOutlineSearch className="text-green-700 cursor-pointer" /></Link>
-                        <FaHeart
-                            className={`cursor-pointer transition ${favoritado ? 'text-red-600' : 'text-gray-400'}`}
-                            onClick={() => {
-                                toggleFavorite(Todo);
-                                setMessage({ type: "success", text: favoritado ? "Removido dos favoritos!" : "Adicionado aos favoritos!" });
-                            }}
-                        />
-                    </div>
-                )}
+        <div className="relative group bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition duration-300">
+            <div className="absolute top-2 right-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 z-10">
+                <FaHeart
+                    className={`text-xl cursor-pointer ${favoritado ? 'text-red-600' : 'text-gray-400'}`}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(Todo);
+                        setMessage({
+                            type: "success",
+                            text: favoritado
+                                ? "Removido dos favoritos!"
+                                : "Adicionado aos favoritos!"
+                        });
+                    }}
+                />
             </div>
+
+            <Link to={`/details/${id}`} className="block h-full">
+                {finalImageUrl && (
+                    <img src={finalImageUrl} alt={title} className="w-full h-80 object-cover" />
+                )}
+
+                <div className="p-4 space-y-2">
+                    <h2 className="text-lg font-bold text-texto flex items-center gap-2">
+                        <span
+                            className={`inline-block w-3 h-3 rounded-full
+        ${status === "a_fazer" ? "bg-gray-100" :
+                                    status === "em_progresso" ? "bg-indigo-300" :
+                                        "bg-gray-900"
+                                }`}
+                        />
+                        {title}
+                    </h2>
+                </div>
+
+
+            </Link>
+
+            {mostrarAcoes && (
+                <div className="absolute bottom-5 right-2 flex gap-4 text-xl z-10">
+                    <RiDeleteBin7Fill
+                        className="text-texto cursor-pointer"
+                        onClick={() => handleDelete(id)}
+                    />
+                    <Link to={`/edit/${id}`}>
+                        <LuPencil className="text-texto cursor-pointer" />
+                    </Link>
+                </div>
+            )}
         </div>
     );
 };
-
 
 export default Todos;

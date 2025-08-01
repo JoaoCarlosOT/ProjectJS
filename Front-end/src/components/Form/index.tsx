@@ -12,6 +12,7 @@ type FormProps = {
 const Form = ({ initialData, isEditing = false }: FormProps) => {
     const [title, setTitle] = useState(initialData?.title || "");
     const [description, setDescription] = useState(initialData?.description || "");
+    const [status, setStatus] = useState(initialData?.status || "a_fazer");
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -47,6 +48,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
             const formData = new FormData();
             formData.append("title", title);
             formData.append("description", description);
+            formData.append("status", status);
             if (file) formData.append("file", file);
 
             let res;
@@ -93,6 +95,21 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
                     onChange={(e) => setDescription(e.target.value)}
                     className="px-4 py-2 border border-gray-300 rounded-lg"
                 />
+            </div>
+
+            <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-gray-700">Status</label>
+                <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value as "a_fazer" | "em_progresso" | "finalizado")}
+                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                >
+                    <option value="a_fazer">A Fazer</option>
+                    <option value="em_progresso">Em Progresso</option>
+                    <option value="finalizado">Finalizado</option>
+                </select>
+
+
             </div>
 
             <div className="flex flex-col">
