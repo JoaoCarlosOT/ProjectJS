@@ -37,44 +37,33 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     };
 
     return (
-        <>
-            <td className="p-3 text-center">
-                {imageUrl && (
-                    <img
-                        src={finalImageUrl}
-                        alt="Todo"
-                        className="w-16 h-16 object-cover rounded-md mx-auto"
-                    />
-                )}
-            </td>
-            <td className="p-3 text-center">{title}</td>
-            <td className="p-3 text-center">{description}</td>
-
-            {mostrarAcoes && (
-                <>
-                    <td>
-                        <RiDeleteBin7Fill className="text-blue-700 cursor-pointer m-auto" onClick={() => handleDelete(id)} />
-                    </td>
-                    <td>
-                        <Link to={`/edit/${id}`}><LuPencil className="text-yellow-500 cursor-pointer m-auto" /></Link>
-                    </td>
-                    <td>
-                        <Link to={`/details/${id}`}><MdOutlineSearch className="text-green-700 cursor-pointer m-auto" /></Link>
-                    </td>
-                </>
+        <div className="bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition">
+            {finalImageUrl && (
+                <img src={finalImageUrl} alt={title} className="w-full h-80 object-cover" />
             )}
 
-            <td>
-                <FaHeart
-                    className={`m-auto cursor-pointer transition ${favoritado ? 'text-red-600' : 'text-gray-400'}`}
-                    onClick={() => {
-                        toggleFavorite(Todo);
-                        setMessage({ type: "success", text: favoritado ? "Removido dos favoritos!" : "Adicionado aos favoritos!" });
-                    }}
-                />
-            </td>
-        </>
+            <div className="p-4 space-y-2">
+                <h2 className="text-lg font-semibold text-blue-700">{title}</h2>
+                <p className="text-gray-600 text-sm">{description}</p>
+
+                {mostrarAcoes && (
+                    <div className="flex justify-between items-center mt-4 text-xl">
+                        <RiDeleteBin7Fill className="text-blue-700 cursor-pointer" onClick={() => handleDelete(id)} />
+                        <Link to={`/edit/${id}`}><LuPencil className="text-yellow-500 cursor-pointer" /></Link>
+                        <Link to={`/details/${id}`}><MdOutlineSearch className="text-green-700 cursor-pointer" /></Link>
+                        <FaHeart
+                            className={`cursor-pointer transition ${favoritado ? 'text-red-600' : 'text-gray-400'}`}
+                            onClick={() => {
+                                toggleFavorite(Todo);
+                                setMessage({ type: "success", text: favoritado ? "Removido dos favoritos!" : "Adicionado aos favoritos!" });
+                            }}
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };
+
 
 export default Todos;

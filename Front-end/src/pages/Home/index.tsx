@@ -3,7 +3,7 @@ import Todos from '../../components/Todos';
 import { Todo } from '../../types/Todo';
 import api from '../../services/api';
 import { AppContext } from '../../context/AppContext';
-import { MessageResponse } from '../../types/MessageResponse';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     const { todos, setTodos } = useContext(AppContext);
@@ -27,30 +27,22 @@ const Home = () => {
 
 
     return (
-        <div className="max-w-4xl mx-auto mt-10 p-4">
-            <h1 className="text-2xl font-bold mb-4">Lista de Tarefas</h1>
-            <table className="w-full border border-gray-300 rounded-xl overflow-hidden shadow-sm">
-                <thead className="bg-blue-600 text-white">
-                    <tr>
-                        <th className="p-3 text-center">Imagem</th>
-                        <th className="p-3 text-center">Título</th>
-                        <th className="p-3 text-center">Descrição</th>
-                        <th className="p-3 text-center">Deletar</th>
-                        <th className="p-3 text-center">Editar</th>
-                        <th className="p-3 text-center">Details</th>
-                        <th className="p-3 text-center">favoritar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {todos.map((todo) => (
-                        <tr key={todo.id} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition">
-                            <Todos Todo={todo} onDelete={handleDeleteTodo} />
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className="max-w-7xl mx-auto mt-10 px-4">
+            <div className='flex items-center justify-between mb-8'>
+                <h1 className="text-3xl text-texto font-bold text-center">Minhas Tarefas</h1>
+                <div className='flex flex-row gap-1'>
+                    <Link to="" className="w-[130px] h-[40px] bg-slate-400 flex items-center justify-center rounded-2xl text-white font-semibold">filtrar</Link>
+                    <Link to="/cadastrar" className="w-[130px] h-[40px] bg-button flex items-center justify-center rounded-2xl text-white font-semibold">Cadastrar</Link>
+                </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {todos.map((todo) => (
+                    <Todos key={todo.id} Todo={todo} onDelete={handleDeleteTodo} />
+                ))}
+            </div>
         </div>
-    )
+    );
 }
 
 export default Home;

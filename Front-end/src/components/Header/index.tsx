@@ -32,11 +32,11 @@ const Header = () => {
     };
 
     return (
-        <header className="flex items-center justify-between px-1 py-4 bg-primary text-white shadow-md w-full relative">
-            <div className="flex items-center justify-between container-desktop w-full">
-                <img src="/logodark.png" alt="Logo" className="w-12 h-12" />
+        <header className="flex items-center justify-center px-1 py-2 bg-background text-texto w-full relative">
+            <div className="flex items-center justify-between w-full mx-10">
+                {/* <img src="/logodark.png" alt="Logo" className="w-12 h-12" /> */}
 
-                <form className="w-full max-w-md" onSubmit={handleSearch}>
+                <form className="max-w-md w-full" onSubmit={handleSearch}>
                     <label htmlFor="search" className="w-full">
                         <input
                             type="text"
@@ -49,22 +49,17 @@ const Header = () => {
                     </label>
                 </form>
 
-
-                <nav className="hidden md:flex flex-wrap gap-6">
-
-
+                <nav className="hidden md:flex items-center gap-6">
                     {authenticated ? (
                         <>
-                            <Link to="/" className=" transition-colors">Home</Link>
-                            <Link to="/cadastrar" className=" transition-colors">Cadastrar</Link>
-                            <Link to="/favoritos" className=" transition-colors">Favoritos</Link>
-                            {authenticated && <UserAvatarMenu />}
-
+                            <Link to="/" className="h-10 flex items-center transition-colors">Home</Link>
+                            <Link to="/favoritos" className="h-10 flex items-center transition-colors">Favoritos</Link>
+                            <UserAvatarMenu />
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className=" transition-colors">Sign in</Link>
-                            <Link to="/register" className=" transition-colors">Sign up</Link>
+                            <Link to="/login" className="h-10 flex items-center transition-colors">Sign in</Link>
+                            <Link to="/register" className="h-10 flex items-center transition-colors">Sign up</Link>
                         </>
                     )}
                 </nav>
@@ -73,19 +68,19 @@ const Header = () => {
                 {/* Botão Mobile */}
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="md:hidden text-white focus:outline-none"
+                    className="md:hidden text-texto focus:outline-none"
                 >
                     {menuOpen ? <IoClose size={28} /> : <TiThMenu size={28} />}
                 </button>
             </div>
 
             <div className={`fixed top-0 right-0 h-full w-full bg-card p-6 z-50 transition-transform duration-300 ${menuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
-                <button onClick={() => setMenuOpen(false)} className="mb-6 text-white">
+                <button onClick={() => setMenuOpen(false)} className="mb-6 text-texto">
                     <IoClose size={24} />
                 </button>
                 <nav className="flex flex-col gap-4">
                     <Link to="/" className=" transition-colors" onClick={() => setMenuOpen(false)}>Home</Link>
-                    <Link to="/cadastrar" className=" transition-colors" onClick={() => setMenuOpen(false)}>Cadastrar</Link>
+                    {/* <Link to="/cadastrar" className=" transition-colors" onClick={() => setMenuOpen(false)}>Cadastrar</Link> */}
                     <Link to="/favoritos" className=" transition-colors" onClick={() => setMenuOpen(false)}>Favoritos</Link>
                     <button
                         type="button"
