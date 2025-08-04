@@ -38,7 +38,7 @@ export const getTodoById = async (req: Request, res: Response): Promise<void> =>
 
 export const createTodo = async (req: Request, res: Response) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, status } = req.body;
     const userId = (req.user as any).id;
 
     const filePath = req.file ? `/uploads/todo/${req.file.filename}` : null;
@@ -46,6 +46,7 @@ export const createTodo = async (req: Request, res: Response) => {
     const todo = await Todo.create({
       title,
       description,
+      status,
       userId,
       imageUrl: filePath,
     });
@@ -58,13 +59,14 @@ export const createTodo = async (req: Request, res: Response) => {
 
 export const updateTodo = async (req: Request, res: Response):Promise<void> => {
   try {
-    const { title, description } = req.body;
+    const { title, description, status } = req.body;
     const todo = await Todo.findByPk(req.params.id);
 
     if (!todo) return res.status(404).json({ message: 'Tarefa não encontrada' });
 
     if (title) todo.title = title;
     if (description) todo.description = description;
+    if (status) todo.status = status;
 
     if (req.file) {
       todo.imageUrl = `/uploads/todo/${req.file.filename}`;

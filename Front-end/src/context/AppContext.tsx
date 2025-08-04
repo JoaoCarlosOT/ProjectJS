@@ -14,6 +14,12 @@ interface AppContextType {
     setAuthenticated: (value: boolean) => void;
     user: User | null;
     setUser: (user: User | null) => void;
+    todoStats: {
+        total: number;
+        aFazer: number;
+        emProgresso: number;
+        finalizados: number;
+    };
 }
 
 export const AppContext = createContext<AppContextType>({
@@ -26,11 +32,23 @@ export const AppContext = createContext<AppContextType>({
     setAuthenticated: () => { },
     user: null,
     setUser: () => { },
+    todoStats: {
+        total: 0,
+        aFazer: 0,
+        emProgresso: 0,
+        finalizados: 0
+    }
 });
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const [favorites, setFavorites] = useState<Todo[]>([]);
     const [todos, setTodos] = useState<Todo[]>([]);
+    const todoStats = {
+        total: todos.length,
+        aFazer: todos.filter(todo => todo.status === 'a_fazer').length,
+        emProgresso: todos.filter(todo => todo.status === 'em_progresso').length,
+        finalizados: todos.filter(todo => todo.status === 'finalizado').length,
+    };
     const [authenticated, setAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
 
@@ -69,7 +87,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             authenticated,
             setAuthenticated,
             user,
-            setUser
+            setUser,
+            todoStats,
         }}>
             {children}
         </AppContext.Provider>

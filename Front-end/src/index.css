@@ -5,32 +5,22 @@
 
 body {
     font-family: "Poppins", sans-serif;
+    background-color: #f4f7fc;
 }
 
 :root {
-    --title: #FFFFFF;
-    --card: #161C24;
-    --card-secondary: #17274D;
-    --card-tertiary: #0F1923;
+    --texto: #3e4c69;
+    --card: #ffffff;
 
     --width-desktop: 1110px;
 
-    --background: #fff;
-    --primary: #053286;
-    --secondary: #28AC72;
-    --tertiary: #ffc703;
+    --background: #f4f7fc;
 
-    --border: hsl(217.2 32.6% 17.5%);
+    --button: #3e4c69;
 
     --input-bg: #161C29;
     --input-border: #676F82;
     --input-placeholder: #454954;
-
-    --outline: transparent;
-    --outline-border: #FFFF;
-
-    --footer-title: #FDFDFD;
-    --footer-bg: #141e26;
 
 }
 

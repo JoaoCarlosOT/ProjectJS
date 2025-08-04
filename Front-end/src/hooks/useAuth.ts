@@ -1,4 +1,3 @@
-// hooks/useAuth.ts
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { useContext } from "react";

@@ -11,7 +11,7 @@ const Message = () => {
     return (
         <div
             className={`
-        fixed bottom-6 left-10 px-4 py-2 rounded shadow 
+        fixed bottom-6 left-10 z-50 px-4 py-2 rounded shadow 
         bg-gray-800 
         ${message.type === "success" ? "text-green-400" : "text-red-400"}
       `}
