@@ -68,6 +68,7 @@ npm run migrate   # Cria as tabelas
 npm run seed      # Insere dados nas tabelas
 npm run undo      # Desfaz a última migration
 npm run reset     # Reseta todas as migrations
+```
 
 ### 3. Configure o backend
 
