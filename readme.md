@@ -1,226 +1,148 @@
-# CloneTrello - Projeto desenvolvido por mim
 
-Este é um projeto visando aprender a fundo todo o ecossistema de desenvolvimento, incluindo arquitetura, UX, devops etc.
+<h1 align="center" style="font-weight: bold;">📝 Task Manager App</h1>  
 
-## 🏗️ Arquitetura
+<p align="center">  
+  <a href="#tech">Tecnologias</a> •   
+  <a href="#start">Como rodar</a> •   
+  <a href="#structure">Arquitetura</a> •  
+  <a href="#contrib">Contribuindo</a> 
+</p>  
 
-O projeto está organizado em um monorepo com as seguintes aplicações:
+<p align="center"><b>Gerencie suas tarefas com organização, filtros e favoritos.</b></p>  
 
-### Apps
-- **`backoffice-api`** - API administrativa (Elysia.js + Drizzle ORM)
-- **`customer-api`** - API para clientes (NestJS + Prisma)
+<p align="center">     
+  <a href="http://localhost:5173">📱 Acesse o projeto</a> 
+</p>
+
+---
+
+## 🎨 Layout
+
+<p align="center">     
+  <img src="./.github/home.png" alt="Tela Home" width="400px">  
+  <img src="./.github/login.png" alt="Tela Login" width="400px"> 
+</p>
+
+---
+
+## 🏗️ Arquitetura <a id="structure"></a>
+
+O projeto é dividido em duas partes:
+
+### 📦 Aplicações
+
+* **`client/`** – Frontend em React + Vite + Tailwind
+* **`server/`** – Backend em Node.js + Express + PostgreSQL
+
+---
 
 ## 📋 Pré-requisitos
 
-- **Node.js** >= 22
-- **pnpm** >= 9.0.0
-- **Docker** e **Docker Compose**
-- **Git**
+* **Node.js** >= 18
+* **Docker** e **Docker Compose**
+* **Git**
 
-## 🚀 Como rodar o projeto
+---
+
+## 🚀 Como rodar o projeto <a id="start"></a>
 
 ### 1. Clone o repositório
 
 ```bash
-git clone <url-do-repositorio>
-cd betzou
+git clone <url-do-repo>
+cd task-manager
 ```
 
-### 2. Instale as dependências
+### 2. Suba os serviços com Docker
 
 ```bash
-pnpm install
-```
-
-### 3. Configure as variáveis de ambiente
-
-#### Setup automático (Recomendado)
-```bash
-# Na raiz do projeto
-pnpm setup:env
-```
-
-Este comando irá copiar os arquivos `.env.example` para `.env` em todas as aplicações.
-
-#### Setup manual
-Se preferir configurar manualmente, crie arquivos `.env` em cada aplicação:
-
-**Backoffice API:**
-```bash
-cd apps/backoffice-api
-cp .env.example .env
-```
-
-**Customer API:**
-```bash
-cd apps/customer-api
-cp .env.example .env
-```
-
-### 4. Inicie os serviços de infraestrutura
-
-```bash
-# Na raiz do projeto
 docker-compose up -d
 ```
 
-Isso irá iniciar:
-- **PostgreSQL** na porta 5432
-- **Redis** na porta 6379
-- **MongoDB** na porta 27017
+> Isso iniciará o PostgreSQL e deixará o banco acessível na porta `5432`.
 
-### 5. Configure o banco de dados
+### 3. Configure o backend
 
-#### Para Customer API (Prisma)
 ```bash
-cd apps/customer-api
-pnpm migrate:up
-pnpm migrate:generate
+cd server
+cp .env.example .env
+npm install
+npm run migrate       # Executa as migrations no banco
+npm run dev           # Inicia o servidor backend (porta 3000)
 ```
 
-### 6. Execute as aplicações
+### 4. Configure o frontend
 
-#### Desenvolvimento (todas as apps)
 ```bash
-# Na raiz do projeto
-pnpm dev
+cd client
+npm install
+npm run dev           # Inicia o app React (porta 5173)
 ```
 
-#### Desenvolvimento individual
+---
 
-**Backoffice API:**
-```bash
-pnpm dev --filter=@betzou/backoffice-api
-```
+## 💻 Tecnologias utilizadas <a id="tech"></a>
 
-**Customer API:**
-```bash
-pnpm dev --filter=@betzou/customer-api
-```
+### 🖥️ Frontend
 
+* React
+* Vite
+* TailwindCSS
+* React Router DOM
+* Axios
+* Context API
 
-## 🛠️ Scripts disponíveis
+### 🛠️ Backend
 
-### Scripts globais (raiz do projeto)
-```bash
-pnpm dev          # Inicia todas as aplicações em modo desenvolvimento
-pnpm build        # Build de todas as aplicações
-pnpm lint         # Executa linting em todas as aplicações
-pnpm lint:fix     # Corrige problemas de linting automaticamente
-pnpm setup:env    # Copia arquivos .env.example para .env
-```
+* Node.js
+* Express
+* PostgreSQL
+* Prisma ORM
+* JWT (autenticação)
 
-### Scripts específicos por aplicação
+### 🐳 Infra
 
-#### Customer API
-```bash
-cd apps/customer-api
-pnpm dev          # Desenvolvimento com hot reload
-pnpm build        # Build para produção
-pnpm start        # Inicia em modo produção
-pnpm migrate:up   # Executa migrations do Prisma
-pnpm migrate:generate # Gera novas migrations
-```
+* Docker
+* Docker Compose
 
-## 🗄️ Bancos de dados
+---
 
-### PostgreSQL (Customer API)
-- **Host:** localhost:5432
-- **User:** postgres
-- **Password:** docker
-- **Database:** sortee
-
-#### Serviços Disponíveis
-
-- **Grafana** (porta 9999): Interface web para visualização
-- **Prometheus** (porta 9090): Coleta de métricas
-```
-
-## 🔧 Ferramentas de desenvolvimento
-
-### ESLint
-Configuração compartilhada com regras para:
-- Double quotes para strings
-- Semicolons no final das statements
-- Espaço antes de brackets
-- Sem espaço antes de parênteses em funções
-
-### TypeScript
-Configurações compartilhadas para todas as aplicações.
-
-### Prettier
-Formatação automática do código.
-
-## 📁 Estrutura do projeto
+## 📁 Estrutura do Projeto
 
 ```
-betzou/
-├── apps/
-│   ├── backoffice-api/     # API administrativa
-│   ├── customer-api/       # API para clientes
-│   ├── games-api/         # API de jogos
-│   └── web-backoffice/    # Interface administrativa
-├── packages/
-│   ├── eslint-config/     # Configurações ESLint
-│   └── tsconfig/          # Configurações TypeScript
-├── monitoring/            # Stack de observabilidade
-├── docker-compose.yml     # Serviços de infraestrutura
-└── package.json          # Configuração do monorepo
+task-manager/
+├── client/              # Aplicação Frontend
+├── server/              # API Backend
+├── docker-compose.yml   # Configuração de banco de dados
+└── README.md
 ```
 
-## 🧪 Testes
+---
 
-### Customer API
-```bash
-cd apps/customer-api
-pnpm test              # Executa todos os testes
-pnpm test:watch        # Executa testes em modo watch
-pnpm test:e2e          # Executa testes end-to-end
-```
+## 🔐 Funcionalidades
 
-## 📝 Migrations
+* Login e Registro de usuários
+* Cadastro, edição e exclusão de tarefas
+* Filtro por status (A fazer, Em progresso, Finalizado)
+* Marcar/desmarcar favoritos
+* Mensagens de feedback (Flash messages)
+* Responsividade total
 
-### Customer API (Prisma)
-```bash
-cd apps/customer-api
-pnpm migrate:generate  # Gera nova migration
-pnpm migrate:up        # Executa migrations pendentes
-```
+---
 
-## 🚀 Deploy
-
-### Build para produção
-```bash
-pnpm build
-```
-
-### Executar em produção
-```bash
-# Backoffice API
-cd apps/backoffice-api
-pnpm start
-
-# Customer API
-cd apps/customer-api
-pnpm start:prod
-
-# Games API
-cd apps/games-api
-pnpm start
-```
-
-## 🤝 Contribuindo
+## 🤝 Contribuindo <a id="contrib"></a>
 
 1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
+2. Crie uma branch: `git checkout -b minha-feature`
+3. Faça commit das alterações: `git commit -m 'feat: adiciona nova funcionalidade'`
+4. Push na branch: `git push origin minha-feature`
 5. Abra um Pull Request
 
-## 📄 Licença
+---
 
-Este projeto é privado e não possui licença pública.
+## 📝 Licença
 
-## 🆘 Suporte
+Este projeto é **privado** e não possui uma licença pública.
 
-Para dúvidas ou problemas, entre em contato com a equipe de desenvolvimento.
+---
+
