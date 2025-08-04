@@ -100,7 +100,7 @@ npm run dev           # Inicia o app React (porta 5173)
 * React Router DOM
 * Axios
 * Context API
-* rechart
+* chartJS
 * zod
 * React Hook Form
 
