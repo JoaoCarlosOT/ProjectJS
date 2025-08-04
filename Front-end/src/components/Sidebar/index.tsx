@@ -1,28 +1,46 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
+import { Doughnut } from "react-chartjs-2";
 import {
-    PieChart,
-    Pie,
-    Cell,
+    Chart as ChartJS,
+    ArcElement,
     Tooltip,
-    ResponsiveContainer,
-} from "recharts";
+    Legend,
+} from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const COLORS = ["#f6f6f8", "#a1a8c4", "#262628"];
 
 const Sidebar = () => {
     const { authenticated, todoStats } = useContext(AppContext);
 
-    if (!authenticated) {
-        return null;
-    }
+    if (!authenticated) return null;
 
-    const data = [
-        { name: "A Fazer", value: todoStats.aFazer },
-        { name: "Em Progresso", value: todoStats.emProgresso },
-        { name: "Finalizados", value: todoStats.finalizados },
-    ];
+    const data = {
+        labels: ["A Fazer", "Em Progresso", "Finalizados"],
+        datasets: [
+            {
+                data: [
+                    todoStats.aFazer,
+                    todoStats.emProgresso,
+                    todoStats.finalizados,
+                ],
+                backgroundColor: COLORS,
+                borderWidth: 0,
+            },
+        ],
+    };
+
+    const options = {
+        cutout: "70%",
+        plugins: {
+            legend: {
+                display: false,
+            },
+        },
+    };
 
     return (
         <aside className="hidden lg:block fixed top-0 left-0 w-[240px] h-screen bg-card rounded-r-3xl p-6 flex flex-col justify-between shadow-lg z-40">
@@ -44,42 +62,14 @@ const Sidebar = () => {
                 </nav>
 
                 <div>
-                    {/* <h3 className="text-sm font-bold text-texto mb-2">Resumo das Tarefas</h3> */}
-                    <div>
-
+                    <div className="relative w-full h-[180px]">
+                        <Doughnut data={data} options={options} />
+                        <div className="absolute inset-0 flex items-center justify-center text-base font-semibold">
+                            {todoStats.total}
+                        </div>
                     </div>
-                    <ResponsiveContainer width="100%" height={180}>
-                        <PieChart>
-                            <Pie
-                                data={data}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={40}
-                                outerRadius={60}
-                                dataKey="value"
-                                startAngle={90}
-                                endAngle={450}
-                            >
-                                {data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-
-                            <text
-                                x="50%"
-                                y="50%"
-                                textAnchor="middle"
-                                dominantBaseline="middle"
-                                className="text-base font-semibold"
-                            >
-                                {todoStats.total}
-                            </text>
-                        </PieChart>
-                    </ResponsiveContainer>
-
 
                     <div className="text-sm text-texto mt-4 space-y-2">
-                        {/* A Fazer */}
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-gray-100" />
@@ -88,7 +78,6 @@ const Sidebar = () => {
                             <span>{todoStats.aFazer}</span>
                         </div>
 
-                        {/* Em Progresso */}
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-indigo-300" />
@@ -97,7 +86,6 @@ const Sidebar = () => {
                             <span>{todoStats.emProgresso}</span>
                         </div>
 
-                        {/* Finalizados */}
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-gray-900" />
@@ -106,7 +94,6 @@ const Sidebar = () => {
                             <span>{todoStats.finalizados}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
         </aside>
