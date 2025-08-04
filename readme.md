@@ -19,8 +19,8 @@
 ## 🎨 Layout
 
 <p align="center">     
-  <img src="./.github/home.png" alt="Tela Home" width="400px">  
-  <img src="./.github/login.png" alt="Tela Login" width="400px"> 
+  <img src="./assets/layout_home.png" alt="Tela Home" width="400px">  
+  <img src="./assets/layout_login.png" alt="Tela Login" width="400px"> 
 </p>
 
 ---
@@ -31,8 +31,8 @@ O projeto é dividido em duas partes:
 
 ### 📦 Aplicações
 
-* **`client/`** – Frontend em React + Vite + Tailwind
-* **`server/`** – Backend em Node.js + Express + PostgreSQL
+* **`Front-end/`** – Frontend em React + Vite + Tailwind
+* **`Back-end/`** – Backend em Node.js + Express + MySQL
 
 ---
 
@@ -50,7 +50,7 @@ O projeto é dividido em duas partes:
 
 ```bash
 git clone <url-do-repo>
-cd task-manager
+cd Projectjs
 ```
 
 ### 2. Suba os serviços com Docker
@@ -59,12 +59,12 @@ cd task-manager
 docker-compose up -d
 ```
 
-> Isso iniciará o PostgreSQL e deixará o banco acessível na porta `5432`.
+> Isso iniciará o MySQL e deixará o banco acessível na porta `5432`.
 
 ### 3. Configure o backend
 
 ```bash
-cd server
+cd Back-end
 cp .env.example .env
 npm install
 npm run migrate       # Executa as migrations no banco
@@ -74,7 +74,7 @@ npm run dev           # Inicia o servidor backend (porta 3000)
 ### 4. Configure o frontend
 
 ```bash
-cd client
+cd Front-end
 npm install
 npm run dev           # Inicia o app React (porta 5173)
 ```
@@ -91,14 +91,22 @@ npm run dev           # Inicia o app React (porta 5173)
 * React Router DOM
 * Axios
 * Context API
+* rechart
+* zod
+* React Hook Form
 
 ### 🛠️ Backend
 
 * Node.js
 * Express
-* PostgreSQL
-* Prisma ORM
-* JWT (autenticação)
+* MySQL
+* Sequelize
+* JWT e oauth (autenticação)
+* multer
+* nodemailer
+* MVC
+* API Restfull
+*
 
 ### 🐳 Infra
 
@@ -111,9 +119,9 @@ npm run dev           # Inicia o app React (porta 5173)
 
 ```
 task-manager/
-├── client/              # Aplicação Frontend
-├── server/              # API Backend
-├── docker-compose.yml   # Configuração de banco de dados
+├── Back-end/              # Aplicação Frontend
+├── Front-end/              # API Backend
+├── docker-compose.yml   # Configuração do back-end e banco de dados
 └── README.md
 ```
 
@@ -121,13 +129,18 @@ task-manager/
 
 ## 🔐 Funcionalidades
 
-* Login e Registro de usuários
+* Login e Registro de usuários com JWT e oauth(google)
 * Cadastro, edição e exclusão de tarefas
 * Filtro por status (A fazer, Em progresso, Finalizado)
 * Marcar/desmarcar favoritos
 * Mensagens de feedback (Flash messages)
-* Responsividade total
-
+* Responsividade
+* upload de arquivos para usuários e tarefas
+* envio de email ao se cadastrar no sistema
+* tema dark e light
+* dashboard para análise dos status das tarefas
+* Edição de sua conta
+* Pesquisar tarefas
 ---
 
 ## 🤝 Contribuindo <a id="contrib"></a>
