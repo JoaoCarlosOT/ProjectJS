@@ -61,6 +61,22 @@ docker-compose up -d
 
 > Isso iniciará o MySQL e deixará o banco acessível na porta `5432`.
 
+#### Setup automático (Recomendado)
+```bash
+# Na raiz do projeto
+npm setup:env
+```
+Este comando irá copiar os arquivos `.env.example` para `.env` em todas as aplicações.
+
+#### Setup manual
+Se preferir configurar manualmente, crie arquivos `.env` em cada aplicação:
+```bash
+cd Back-end
+copy .env.example .env
+cd ../Front-end
+copy .env.example .env
+```
+
 ## 📝 Comandos úteis de Migrations
 
 ```bash

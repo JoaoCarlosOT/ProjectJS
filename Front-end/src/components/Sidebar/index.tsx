@@ -43,7 +43,7 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="hidden lg:block fixed top-0 left-0 w-[240px] h-screen bg-card rounded-r-3xl p-6 flex flex-col justify-between shadow-lg z-40">
+        <aside className="hidden lg:block fixed top-0 left-0 w-[180px] h-screen bg-card rounded-r-3xl p-6 flex flex-col justify-between shadow-lg z-40">
             <div>
                 <img src="/logodark.png" alt="Logo" className="w-10 h-10 mb-6" />
                 <nav className="flex flex-col gap-4 text-texto mb-6">
@@ -62,7 +62,7 @@ const Sidebar = () => {
                 </nav>
 
                 <div>
-                    <div className="relative w-full h-[180px]">
+                    <div className="relative w-full h-[130px]">
                         <Doughnut data={data} options={options} />
                         <div className="absolute inset-0 flex items-center justify-center text-base font-semibold">
                             {todoStats.total}

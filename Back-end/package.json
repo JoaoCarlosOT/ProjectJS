@@ -9,7 +9,8 @@
     "migrate": "sequelize-cli db:migrate",
     "undo": "sequelize-cli db:migrate:undo",
     "seed": "sequelize-cli db:seed:all",
-    "reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate"
+    "reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate",
+    "setup-env": "copy .env.example .env"
   },
   "keywords": [],
   "author": "",
