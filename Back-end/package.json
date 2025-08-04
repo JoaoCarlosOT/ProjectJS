@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "migrate": "sequelize-cli db:migrate",
+    "undo": "sequelize-cli db:migrate:undo",
+    "seed": "sequelize-cli db:seed:all",
+    "reset": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +33,7 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.14.1",
     "@types/nodemailer": "^6.4.17",
+    "sequelize-cli": "^6.6.3",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"

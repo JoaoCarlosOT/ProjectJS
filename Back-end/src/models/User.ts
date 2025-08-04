@@ -18,7 +18,7 @@ export const User = sequelize.define('User', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: true, // Importante: Google users não têm senha
+    allowNull: true, 
   },
   profileImage: {
     type: DataTypes.STRING,
@@ -27,6 +27,6 @@ export const User = sequelize.define('User', {
   provider: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: 'local', // 'google' se vier do Google
+    defaultValue: 'local', 
   },
 });
