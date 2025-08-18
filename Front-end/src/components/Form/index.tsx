@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Todo } from '../../types/Todo';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Todo } from "../../types/Todo";
 import api from "../../services/api";
-import { useMessage } from '../../context/FlashMessageContext';
+import { useMessage } from "../../context/FlashMessageContext";
+import { todoSchema, TodoInput } from "../../schemas/todoSchema";
 
 type FormProps = {
     initialData?: Todo;
@@ -12,24 +13,25 @@ type FormProps = {
 const Form = ({ initialData, isEditing = false }: FormProps) => {
     const [title, setTitle] = useState(initialData?.title || "");
     const [description, setDescription] = useState(initialData?.description || "");
-    const [status, setStatus] = useState(initialData?.status || "a_fazer");
+    const [status, setStatus] = useState<TodoInput["status"]>(
+        initialData?.status || "a_fazer"
+    );
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [errors, setErrors] = useState<Partial<Record<keyof TodoInput, string>>>(
+        {}
+    );
+
     const navigate = useNavigate();
     const { setMessage } = useMessage();
 
     useEffect(() => {
-        if (initialData) {
-            setTitle(initialData.title);
-            setDescription(initialData.description);
-
-            if (initialData.imageUrl) {
-                const isFullUrl = initialData.imageUrl.startsWith("http");
-                const fullUrl = isFullUrl
-                    ? initialData.imageUrl
-                    : `${import.meta.env.VITE_API_URL}${initialData.imageUrl}`;
-                setPreviewUrl(fullUrl);
-            }
+        if (initialData?.imageUrl) {
+            const isFullUrl = initialData.imageUrl.startsWith("http");
+            const fullUrl = isFullUrl
+                ? initialData.imageUrl
+                : `${import.meta.env.VITE_API_URL}${initialData.imageUrl}`;
+            setPreviewUrl(fullUrl);
         }
     }, [initialData]);
 
@@ -43,6 +45,21 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const validation = todoSchema.safeParse({
+            title,
+            description,
+            status,
+        });
+
+        if (!validation.success) {
+            const fieldErrors: any = {};
+            validation.error.issues.forEach((err) => {
+                if (err.path[0]) fieldErrors[err.path[0]] = err.message;
+            });
+            setErrors(fieldErrors);
+            return;
+        }
 
         try {
             const formData = new FormData();
@@ -85,6 +102,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
                     onChange={(e) => setTitle(e.target.value)}
                     className="px-4 py-2 border border-gray-300 rounded-lg"
                 />
+                {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
             </div>
 
             <div className="flex flex-col">
@@ -95,25 +113,30 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
                     onChange={(e) => setDescription(e.target.value)}
                     className="px-4 py-2 border border-gray-300 rounded-lg"
                 />
+                {errors.description && (
+                    <p className="text-red-500 text-sm">{errors.description}</p>
+                )}
             </div>
 
             <div className="flex flex-col">
                 <label className="mb-1 text-sm font-medium text-gray-700">Status</label>
                 <select
                     value={status}
-                    onChange={(e) => setStatus(e.target.value as "a_fazer" | "em_progresso" | "finalizado")}
+                    onChange={(e) =>
+                        setStatus(e.target.value as "a_fazer" | "em_progresso" | "finalizado")
+                    }
                     className="px-4 py-2 border border-gray-300 rounded-lg"
                 >
                     <option value="a_fazer">A Fazer</option>
                     <option value="em_progresso">Em Progresso</option>
                     <option value="finalizado">Finalizado</option>
                 </select>
-
-
             </div>
 
             <div className="flex flex-col">
-                <label className="mb-1 text-sm font-medium text-gray-700">Imagem (opcional)</label>
+                <label className="mb-1 text-sm font-medium text-gray-700">
+                    Imagem (opcional)
+                </label>
                 <input
                     type="file"
                     accept="image/*"
@@ -139,4 +162,3 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
 };
 
 export default Form;
-

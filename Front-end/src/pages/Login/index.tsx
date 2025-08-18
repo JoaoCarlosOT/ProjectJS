@@ -3,48 +3,46 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { useMessage } from '../../context/FlashMessageContext';
 import GoogleLoginButton from '../../components/LoginGoogle';
-// import { MessageResponse } from '../../types/MessageResponse';
 import { Link } from 'react-router-dom';
+import { z } from 'zod';
+import { loginSchema } from '../../schemas/userSchema';
 
-type LoginFormState = {
-    email: string;
-    password: string;
-};
+type LoginFormState = z.infer<typeof loginSchema>;
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-
-    // const token = localStorage.getItem("token");
-
-    // if (token) {
-    //     navigate('/');
-    // }
-
     const [form, setForm] = useState<LoginFormState>({ email: '', password: '' });
+    const [errors, setErrors] = useState<Partial<Record<keyof LoginFormState, string>>>({});
 
     const { login } = useAuth();
     const { setMessage } = useMessage();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+        setErrors({ ...errors, [e.target.name]: undefined });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!form.email || !form.password) {
-            setMessage({ type: 'error', text: 'Preencha todos os campos.' });
+        const validation = loginSchema.safeParse(form);
+
+        if (!validation.success) {
+            const fieldErrors: Partial<Record<keyof LoginFormState, string>> = {};
+            validation.error.issues.forEach((err) => {
+                const key = err.path[0] as keyof LoginFormState;
+                if (key) fieldErrors[key] = err.message;
+            });
+            setErrors(fieldErrors);
             return;
         }
 
         try {
-            const res = await login(form);
-            // const msg = res.data.message || "Logado com sucesso"
-            setMessage({ type: 'success', text: "Logado com sucesso!" });
+            await login(form);
+            setMessage({ type: 'success', text: 'Logado com sucesso!' });
             navigate('/');
-        } catch (error) {
-            setMessage({ type: 'error', text: "Erro ao logar!" });
-            console.log(error);
+        } catch (error: any) {
+            setMessage({ type: 'error', text: error.response?.data?.message || 'Erro ao logar!' });
         }
     };
 
@@ -74,6 +72,7 @@ const Login: React.FC = () => {
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
                             placeholder="Digite seu email"
                         />
+                        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                     </div>
 
                     <div className="mb-6">
@@ -86,6 +85,7 @@ const Login: React.FC = () => {
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
                             placeholder="Digite sua senha"
                         />
+                        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
                     </div>
 
                     <button
@@ -100,9 +100,9 @@ const Login: React.FC = () => {
                     </div>
 
                     <p className="mt-4 text-center text-gray-600">
-                        Já tem uma conta?{" "}
+                        Não tem conta?{" "}
                         <Link to="/register" className="font-bold underline">
-                            Register
+                            Registrar
                         </Link>
                     </p>
                 </form>
