@@ -159,7 +159,7 @@ export const home = async (req: Request, res: Response): Promise<void> => {
 
 export const updateProfile = async (req: Request, res: Response): Promise<void> => {
   try {
-    const parsed = updateProfileSchema.parse(req.body); // 🔹 Validação Zod
+    const parsed = updateProfileSchema.parse(req.body);
     const userId = (req.user as any).id;
     const { name } = parsed;
     const file = req.file;
