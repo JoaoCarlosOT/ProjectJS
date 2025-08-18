@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Todo } from '../models/todo';
 import { Op } from 'sequelize';
+import { todoSchema } from '../../schemas/todoSchema';
 
 export const getAllTodo = async (req: Request, res: Response): Promise<void> => {
   const userId = (req.user as any).id;
@@ -10,7 +11,7 @@ export const getAllTodo = async (req: Request, res: Response): Promise<void> => 
 
 export const searchTodos = async (req: Request, res: Response): Promise<void> => {
   const userId = (req.user as any).id;
-  const search = req.query.search as string;
+  const search = req.body.search as string;
 
   try {
     const todos = await Todo.findAll({
@@ -36,6 +37,30 @@ export const getTodoById = async (req: Request, res: Response): Promise<void> =>
   todo ? res.json(todo) : res.status(404).json({ message: 'Todo não encontrado' });
 };
 
+// export const createTodo = async (req: Request, res: Response): Promise<Response> => {
+//   try {
+//     const parsed = todoSchema.safeParse(req.body);
+
+//     if (!parsed.success) {
+//       return res.status(400).json({ errors: parsed.error.issues });
+//     }
+
+//     const userId = (req.user as any).id;
+//     const filePath = req.file ? `/uploads/todo/${req.file.filename}` : null;
+
+//     const todo = await Todo.create({
+//       ...parsed.data,
+//       userId,
+//       imageUrl: filePath || parsed.data.imageUrl || null,
+//     });
+
+//     return res.status(201).json(todo);
+//   } catch (err) {
+//     return res.status(500).json({ message: 'Erro ao criar tarefa.' });
+//   }
+// };
+
+
 export const createTodo = async (req: Request, res: Response) => {
   try {
     const { title, description, status } = req.body;
@@ -57,16 +82,17 @@ export const createTodo = async (req: Request, res: Response) => {
   }
 };
 
-export const updateTodo = async (req: Request, res: Response):Promise<void> => {
+export const updateTodo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, description, status } = req.body;
     const todo = await Todo.findByPk(req.params.id);
-
     if (!todo) return res.status(404).json({ message: 'Tarefa não encontrada' });
 
-    if (title) todo.title = title;
-    if (description) todo.description = description;
-    if (status) todo.status = status;
+    const parsed = todoSchema.partial().safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ errors: parsed.error.issues });
+    }
+
+    Object.assign(todo, parsed.data);
 
     if (req.file) {
       todo.imageUrl = `/uploads/todo/${req.file.filename}`;

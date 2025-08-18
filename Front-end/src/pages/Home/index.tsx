@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import Todos from '../../components/Todos';
 import { Todo } from '../../types/Todo';
 import api from '../../services/api';
@@ -9,6 +9,7 @@ import Loading from '../../components/Loading';
 
 const Home = () => {
     const { todos, setTodos, loading, setLoading } = useContext(AppContext);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const fetchTodos = async () => {
@@ -42,11 +43,47 @@ const Home = () => {
             <div className='flex items-center justify-between mb-8 max-[500px]:flex-col max-[400px]:gap-3 max-[400px]:text-center'>
                 <h1 className="text-2xl md:text-3xl text-texto font-bold text-center">Minhas Tarefas</h1>
                 <div className='flex flex-row gap-1'>
-                    <Link to="" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-card flex items-center justify-center rounded-2xl text-texto font-semibold gap-2 border-[2px] text-xs sm:text-base md:text-md">
+                    <Link to="" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-card flex items-center justify-center rounded-2xl text-texto font-semibold gap-2 border-[1px] border-slate-700 text-xs sm:text-base md:text-md" onClick={() => {
+                        setOpen(prev => !prev);
+                    }}>
                         <IoFilter className='text-[22px]' />
                         Filter
+                        {open && (
+                            <div className="absolute right-52 top-36 w-56 bg-card  border rounded shadow-lg z-50">
+                                <button
+                                    className="block w-full text-left px-4 py-2 text-texto hover:bg-slate-300"
+                                >
+                                    All
+                                </button>
+
+                                <button
+                                    className="block w-full text-left px-4 py-2 text-texto hover:bg-slate-300"
+
+                                >
+                                    favoritos
+                                </button>
+
+                                <button
+                                    className="block w-full text-left px-4 py-2 text-texto hover:bg-slate-300"
+                                >
+                                    A fazer
+                                </button>
+
+                                <button
+                                    className="block w-full text-left px-4 py-2 text-texto hover:bg-slate-300"
+                                >
+                                    em progresso
+                                </button>
+                                <button
+                                    className="block w-full text-left px-4 py-2 text-texto hover:bg-slate-300"
+                                >
+                                    finalizados
+                                </button>
+                            </div>
+                        )}
                     </Link>
-                    <Link to="/cadastrar" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-button flex items-center justify-center rounded-2xl text-white font-semibold gap-2 border-[2px] text-xs sm:text-base md:text-md">
+
+                    <Link to="/cadastrar" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-button flex items-center justify-center rounded-2xl text-white font-semibold gap-2 border-[1px] text-xs sm:text-base md:text-md">
                         <IoAddOutline className='text-[22px] font-bold' />
                         New Task
                     </Link>

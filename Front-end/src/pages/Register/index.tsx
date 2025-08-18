@@ -1,61 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useAuth from '../../hooks/useAuth';
 import GoogleLoginButton from '../../components/LoginGoogle';
 import { useMessage } from '../../context/FlashMessageContext';
-import { MessageResponse } from '../../types/MessageResponse';
 import { Link } from 'react-router-dom';
+import { z } from 'zod';
+import { registerSchema } from '../../schemas/userSchema';
 
-interface RegisterUser {
-    name: string;
-    email: string;
-    password: string;
-};
+type RegisterFormState = z.infer<typeof registerSchema>;
 
 const Register: React.FC = () => {
-    const [user, setUser] = useState<RegisterUser>({ email: '', password: '', name: '' });
+    const [form, setForm] = useState<Partial<RegisterFormState>>({
+        name: '',
+        email: '',
+        password: '',
+    });
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormState | 'profileImage', string>>>({});
 
     const { register } = useAuth();
     const { setMessage } = useMessage();
 
+    useEffect(() => {
+        if (profileImage) {
+            setImagePreview(URL.createObjectURL(profileImage));
+        }
+    }, [profileImage]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUser({ ...user, [e.target.name]: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value });
+        setErrors({ ...errors, [e.target.name]: undefined });
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setProfileImage(file);
-            setImagePreview(URL.createObjectURL(file));
+        const file = e.target.files?.[0] || null;
+
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            setErrors({ ...errors, profileImage: 'Apenas PNG, JPG ou JPEG são permitidos' });
+            setProfileImage(null);
+            setImagePreview(null);
+            return;
         }
+
+        const maxSize = 15 * 1024 * 1024;
+        if (file.size > maxSize) {
+            setErrors({ ...errors, profileImage: 'A imagem deve ter no máximo 15 MB' });
+            setProfileImage(null);
+            setImagePreview(null);
+            return;
+        }
+
+        setProfileImage(file);
+        setImagePreview(URL.createObjectURL(file));
+        setErrors({ ...errors, profileImage: undefined });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!user.name || !user.email || !user.password || !profileImage) {
-            setMessage({ type: 'error', text: 'Preencha todos os campos e selecione uma imagem.' });
+        const validation = registerSchema.safeParse({ ...form });
+
+        if (!validation.success) {
+            const fieldErrors: Partial<Record<keyof RegisterFormState | 'profileImage', string>> = {};
+            validation.error.issues.forEach((err) => {
+                const key = err.path[0] as keyof RegisterFormState;
+                if (key) fieldErrors[key] = err.message;
+            });
+            setErrors(fieldErrors);
+            return;
+        }
+
+        if (!profileImage) {
+            setErrors({ ...errors, profileImage: 'Selecione uma imagem de perfil' });
             return;
         }
 
         const formData = new FormData();
-        formData.append('name', user.name);
-        formData.append('email', user.email);
-        formData.append('password', user.password);
+        formData.append('name', form.name!);
+        formData.append('email', form.email!);
+        formData.append('password', form.password!);
         formData.append('profileImage', profileImage);
 
         try {
             const res = await register(formData);
-            const msg = res.data.message || "Registrado com sucesso";
+            const msg = (res.data as any)?.message || 'Registrado com sucesso';
             setMessage({ type: 'success', text: msg });
-        } catch (error) {
-            setMessage({ type: 'error', text: 'Erro ao registrar. Verifique os dados e tente novamente.' });
+        } catch (error: any) {
+            setMessage({
+                type: 'error',
+                text: error.response?.data?.message || 'Erro ao registrar. Verifique os dados e tente novamente.',
+            });
         }
     };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen text-texto">
             <div
                 className="hidden md:flex w-1/2 bg-cover bg-center"
                 style={{ backgroundImage: "url('/mountain.jpg')" }}
@@ -66,58 +108,58 @@ const Register: React.FC = () => {
                 </div>
             </div>
 
-            <div className="flex w-full md:w-1/2 justify-center items-center bg-white">
-                <form
-                    onSubmit={handleSubmit}
-                    className="w-80"
-                    encType="multipart/form-data"
-                >
+            <div className="flex w-full md:w-1/2 justify-center items-center bg-background">
+                <form onSubmit={handleSubmit} className="w-80" encType="multipart/form-data">
                     <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
 
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Nome</label>
+                        <label className="bloc text-sm font-semibold mb-2">Nome</label>
                         <input
                             type="text"
                             name="name"
-                            value={user.name}
+                            value={form.name || ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
                             placeholder="Digite seu nome"
                         />
+                        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                     </div>
 
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                        <label className="bloc text-sm font-semibold mb-2">Email</label>
                         <input
                             type="email"
                             name="email"
-                            value={user.email}
+                            value={form.email || ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
                             placeholder="Digite seu email"
                         />
+                        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                     </div>
 
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Senha</label>
+                        <label className="block text-sm font-semibold mb-2">Senha</label>
                         <input
                             type="password"
                             name="password"
-                            value={user.password}
+                            value={form.password || ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
                             placeholder="Digite sua senha"
                         />
+                        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Imagem de Perfil</label>
+                        <label className="block text-sm font-semibold mb-2">Imagem de Perfil</label>
                         <input
                             type="file"
-                            accept="image/*"
+                            accept="image/png, image/jpeg, image/jpg"
                             onChange={handleImageChange}
                             className="w-full text-sm"
                         />
+                        {errors.profileImage && <p className="text-red-500 text-sm">{errors.profileImage}</p>}
                         {imagePreview && (
                             <img
                                 src={imagePreview}
@@ -138,7 +180,7 @@ const Register: React.FC = () => {
                         <GoogleLoginButton />
                     </div>
 
-                    <p className="mt-4 text-center text-gray-600">
+                    <p className="mt-4 text-center">
                         Já tem uma conta?{" "}
                         <Link to="/login" className="font-bold underline">
                             Login
