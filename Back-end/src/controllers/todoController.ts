@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { Todo } from '../models/todo';
 import { Op } from 'sequelize';
+import { todoSchema } from '../../schemas/todoSchema';
+import { z } from 'zod';
 
 export const getAllTodo = async (req: Request, res: Response): Promise<void> => {
   const userId = (req.user as any).id;
@@ -38,17 +40,19 @@ export const getTodoById = async (req: Request, res: Response): Promise<void> =>
 
 export const createTodo = async (req: Request, res: Response) => {
   try {
-    const { title, description, status } = req.body;
-    const userId = (req.user as any).id;
+    const parsed = todoSchema.safeParse(req.body);
 
+    if (!parsed.success) {
+      return res.status(400).json({ errors: parsed.error.errors });
+    }
+
+    const userId = (req.user as any).id;
     const filePath = req.file ? `/uploads/todo/${req.file.filename}` : null;
 
     const todo = await Todo.create({
-      title,
-      description,
-      status,
+      ...parsed.data,
       userId,
-      imageUrl: filePath,
+      imageUrl: filePath || parsed.data.imageUrl || null,
     });
 
     res.status(201).json(todo);
@@ -57,16 +61,17 @@ export const createTodo = async (req: Request, res: Response) => {
   }
 };
 
-export const updateTodo = async (req: Request, res: Response):Promise<void> => {
+export const updateTodo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, description, status } = req.body;
     const todo = await Todo.findByPk(req.params.id);
-
     if (!todo) return res.status(404).json({ message: 'Tarefa não encontrada' });
 
-    if (title) todo.title = title;
-    if (description) todo.description = description;
-    if (status) todo.status = status;
+    const parsed = todoSchema.partial().safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ errors: parsed.error.errors });
+    }
+
+    Object.assign(todo, parsed.data);
 
     if (req.file) {
       todo.imageUrl = `/uploads/todo/${req.file.filename}`;
