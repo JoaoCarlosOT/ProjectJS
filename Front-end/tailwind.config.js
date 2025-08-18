@@ -11,6 +11,7 @@ export default {
         texto:'var(--texto)',
         card:'var(--card)',
         button:'var(--button)',
+        outborder:'var(--outborder)',
       },
       screens: {
         'xs': '400px',      

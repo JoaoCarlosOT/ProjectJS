@@ -47,7 +47,7 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen text-texto">
             <div
                 className="hidden md:flex w-1/2 bg-cover bg-center"
                 style={{ backgroundImage: "url('/mountain.jpg')" }}
@@ -58,12 +58,12 @@ const Login: React.FC = () => {
                 </div>
             </div>
 
-            <div className="flex w-full md:w-1/2 justify-center items-center bg-white">
+            <div className="flex w-full md:w-1/2 justify-center items-center bg-background">
                 <form onSubmit={handleSubmit} className="w-80">
                     <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                        <label className="block text-sm font-semibold mb-2">Email</label>
                         <input
                             type="email"
                             name="email"
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Senha</label>
+                        <label className="block text-sm font-semibold mb-2">Senha</label>
                         <input
                             type="password"
                             name="password"
@@ -99,7 +99,7 @@ const Login: React.FC = () => {
                         <GoogleLoginButton />
                     </div>
 
-                    <p className="mt-4 text-center text-gray-600">
+                    <p className="mt-4 text-center text-texto">
                         Não tem conta?{" "}
                         <Link to="/register" className="font-bold underline">
                             Registrar

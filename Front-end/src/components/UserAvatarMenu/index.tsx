@@ -40,14 +40,14 @@ const UserAvatarMenu = () => {
                         alt="avatar"
                         className="w-10 h-10 rounded-full border"
                     />
-                    <p className="text-md font-bold text-gray-600">{user.name}</p>
+                    <p className="text-md font-bold text-texto">{user.name}</p>
                 </div>
                 <IoIosArrowDown className="text-sd ml-2" />
 
             </div>
 
             {open && (
-                <div className="absolute right-0 mt-2 w-56 bg-background  border rounded shadow-lg z-50">
+                <div className="absolute right-0 mt-2 w-56 bg-card  border rounded shadow-lg z-50">
                     <div className="p-4 text-texto">
                         <p className="font-semibold">{user.email}</p>
                     </div>

@@ -42,11 +42,11 @@ const Home = () => {
             <div className='flex items-center justify-between mb-8 max-[500px]:flex-col max-[400px]:gap-3 max-[400px]:text-center'>
                 <h1 className="text-2xl md:text-3xl text-texto font-bold text-center">Minhas Tarefas</h1>
                 <div className='flex flex-row gap-1'>
-                    <Link to="" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-card flex items-center justify-center rounded-2xl text-texto font-semibold gap-2 border-[2px] text-xs sm:text-base md:text-md">
+                    <Link to="" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-card flex items-center justify-center rounded-2xl text-texto font-semibold gap-2 border-[1px] border-slate-700 text-xs sm:text-base md:text-md">
                         <IoFilter className='text-[22px]' />
                         Filter
                     </Link>
-                    <Link to="/cadastrar" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-button flex items-center justify-center rounded-2xl text-white font-semibold gap-2 border-[2px] text-xs sm:text-base md:text-md">
+                    <Link to="/cadastrar" className="w-[110px] h-[36px] sm:w-[120px] sm:h-[38px] md:w-[130px] md:h-[40px] bg-button flex items-center justify-center rounded-2xl text-white font-semibold gap-2 border-[1px] text-xs sm:text-base md:text-md">
                         <IoAddOutline className='text-[22px] font-bold' />
                         New Task
                     </Link>

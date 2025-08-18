@@ -38,7 +38,7 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     };
 
     return (
-        <div className="relative group bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition duration-300">
+        <div className="relative group bg-card rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition duration-300">
             <div className="absolute top-2 right-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 z-10">
                 <FaHeart
                     className={`text-xl cursor-pointer ${favoritado ? 'text-red-600' : 'text-gray-400'}`}

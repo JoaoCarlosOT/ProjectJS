@@ -97,7 +97,7 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen text-texto">
             <div
                 className="hidden md:flex w-1/2 bg-cover bg-center"
                 style={{ backgroundImage: "url('/mountain.jpg')" }}
@@ -108,12 +108,12 @@ const Register: React.FC = () => {
                 </div>
             </div>
 
-            <div className="flex w-full md:w-1/2 justify-center items-center bg-white">
+            <div className="flex w-full md:w-1/2 justify-center items-center bg-background">
                 <form onSubmit={handleSubmit} className="w-80" encType="multipart/form-data">
                     <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
 
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Nome</label>
+                        <label className="bloc text-sm font-semibold mb-2">Nome</label>
                         <input
                             type="text"
                             name="name"
@@ -126,7 +126,7 @@ const Register: React.FC = () => {
                     </div>
 
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                        <label className="bloc text-sm font-semibold mb-2">Email</label>
                         <input
                             type="email"
                             name="email"
@@ -139,7 +139,7 @@ const Register: React.FC = () => {
                     </div>
 
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Senha</label>
+                        <label className="block text-sm font-semibold mb-2">Senha</label>
                         <input
                             type="password"
                             name="password"
@@ -152,7 +152,7 @@ const Register: React.FC = () => {
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-semibold mb-2">Imagem de Perfil</label>
+                        <label className="block text-sm font-semibold mb-2">Imagem de Perfil</label>
                         <input
                             type="file"
                             accept="image/png, image/jpeg, image/jpg"
@@ -180,7 +180,7 @@ const Register: React.FC = () => {
                         <GoogleLoginButton />
                     </div>
 
-                    <p className="mt-4 text-center text-gray-600">
+                    <p className="mt-4 text-center">
                         Já tem uma conta?{" "}
                         <Link to="/login" className="font-bold underline">
                             Login
