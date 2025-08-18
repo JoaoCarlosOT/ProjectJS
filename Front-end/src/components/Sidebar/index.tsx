@@ -45,7 +45,7 @@ const Sidebar = () => {
     return (
         <aside className="hidden lg:block fixed top-0 left-0 w-[180px] h-screen bg-card rounded-r-3xl p-6 flex flex-col justify-between shadow-lg z-40">
             <div>
-                <img src="/logodark.png" alt="Logo" className="w-10 h-10 mb-6" />
+                <img src="/logoDarkJS.png" alt="Logo" className="w-50 h-15 mb-6" />
                 <nav className="flex flex-col gap-4 text-texto mb-6">
                     <Link
                         to="/"

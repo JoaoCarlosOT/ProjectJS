@@ -20,9 +20,11 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     const { setMessage } = useMessage();
     const favoritado = isFavorite(id);
 
-    const finalImageUrl = imageUrl?.startsWith("http")
-        ? imageUrl
-        : `${import.meta.env.VITE_API_URL}${imageUrl}`;
+    const finalImageUrl = imageUrl
+        ? (imageUrl.startsWith("http")
+            ? imageUrl
+            : `${import.meta.env.VITE_API_URL}${imageUrl}`)
+        : "/defaultTodo.jpg";
 
     const handleDelete = async (id: string) => {
         try {

@@ -1,4 +1,3 @@
-// components/Message.tsx
 import { useMessage } from "../../context/FlashMessageContext";
 
 const Message = () => {

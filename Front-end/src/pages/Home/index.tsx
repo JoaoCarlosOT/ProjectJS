@@ -1,17 +1,19 @@
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react';
 import Todos from '../../components/Todos';
 import { Todo } from '../../types/Todo';
 import api from '../../services/api';
 import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import { IoFilter, IoAddOutline } from "react-icons/io5";
+import Loading from '../../components/Loading';
 
 const Home = () => {
-    const { todos, setTodos } = useContext(AppContext);
+    const { todos, setTodos, loading, setLoading } = useContext(AppContext);
 
     useEffect(() => {
         const fetchTodos = async () => {
             try {
+                setLoading(true);
                 const response = await api.get<Todo[]>('/todos');
                 setTodos(response.data);
             } catch (error) {
@@ -20,12 +22,20 @@ const Home = () => {
         };
 
         fetchTodos();
-    }, [setTodos]);
+        setLoading(false);
+    }, [setTodos, setLoading]);
 
     const handleDeleteTodo = (id: string) => {
         setTodos((prev: Todo[]) => prev.filter((todo) => todo.id !== id));
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Loading />
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-7xl mx-auto mt-10 px-4">

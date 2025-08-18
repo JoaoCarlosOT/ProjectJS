@@ -1,4 +1,3 @@
-// context/MessageContext.tsx
 import { createContext, useState, useContext } from "react";
 
 type Message = { type: "success" | "error"; text: string };

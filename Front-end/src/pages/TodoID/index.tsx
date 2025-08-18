@@ -23,7 +23,6 @@ const TodoID = () => {
         return <p>Carregando...</p>;
     }
 
-    // Corrige a URL da imagem, se for relativa
     const finalImageUrl = todo.imageUrl?.startsWith('http')
         ? todo.imageUrl
         : `${import.meta.env.VITE_API_URL}${todo.imageUrl}`;

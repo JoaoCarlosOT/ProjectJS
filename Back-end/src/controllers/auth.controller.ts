@@ -74,7 +74,7 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
     if (!user) {
       user = await User.create({
         email,
-        password: '', // senha vazia, pois não é usada
+        password: '',
         profileImage: picture,
         name,
       });
@@ -86,7 +86,6 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
 }
     }
 
-    // Gera token da sua API
     const yourToken = jwt.sign(
       { id: user.getDataValue('id'), email },
       process.env.JWT_SECRET || '',

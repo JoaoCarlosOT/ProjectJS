@@ -3,8 +3,9 @@ import api from '../services/api';
 import { Todo } from '../types/Todo';
 import { User } from '../types/User';
 
-
 interface AppContextType {
+    loading: boolean;
+    setLoading: (value: boolean) => void;
     favorites: Todo[];
     toggleFavorite: (todo: Todo) => void;
     isFavorite: (id: string | number) => boolean;
@@ -23,6 +24,8 @@ interface AppContextType {
 }
 
 export const AppContext = createContext<AppContextType>({
+    loading: false,
+    setLoading: () => { },
     favorites: [],
     toggleFavorite: () => { },
     isFavorite: () => false,
@@ -41,28 +44,39 @@ export const AppContext = createContext<AppContextType>({
 });
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+    const [loading, setLoading] = useState(true);
     const [favorites, setFavorites] = useState<Todo[]>([]);
     const [todos, setTodos] = useState<Todo[]>([]);
+    const [authenticated, setAuthenticated] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+
     const todoStats = {
         total: todos.length,
         aFazer: todos.filter(todo => todo.status === 'a_fazer').length,
         emProgresso: todos.filter(todo => todo.status === 'em_progresso').length,
         finalizados: todos.filter(todo => todo.status === 'finalizado').length,
     };
-    const [authenticated, setAuthenticated] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+
         if (token) {
             api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-            setAuthenticated(true);
+
             api.get<{ user: User }>('/home')
-                .then(res => setUser(res.data.user))
+                .then(res => {
+                    setUser(res.data.user);
+                    setAuthenticated(true);
+                    setLoading(false);
+                })
                 .catch(() => {
                     localStorage.removeItem('token');
                     setAuthenticated(false);
+                    setUser(null);
+                    setLoading(false);
                 });
+        } else {
+            setLoading(false);
         }
     }, []);
 
@@ -79,6 +93,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <AppContext.Provider value={{
+            loading,
+            setLoading,
             favorites,
             toggleFavorite,
             isFavorite,

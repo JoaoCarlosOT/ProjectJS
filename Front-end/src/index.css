@@ -24,6 +24,16 @@ body {
 
 }
 
+.dark {
+    --texto: #f1f1f1;
+    --card: #1f1f24;
+    --background: #121212;
+    --button: #444cf7;
+    --input-bg: #2c2c2e;
+    --input-border: #5a5a5a;
+    --input-placeholder: #8a8a8a;
+}
+
 @layer utilities {
     .container-desktop {
         @apply mx-auto max-w-[1110px];

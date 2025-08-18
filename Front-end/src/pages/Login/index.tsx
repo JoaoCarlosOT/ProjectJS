@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { useMessage } from '../../context/FlashMessageContext';
 import GoogleLoginButton from '../../components/LoginGoogle';
-import { MessageResponse } from '../../types/MessageResponse';
+// import { MessageResponse } from '../../types/MessageResponse';
 import { Link } from 'react-router-dom';
 
 type LoginFormState = {
@@ -12,8 +12,15 @@ type LoginFormState = {
 };
 
 const Login: React.FC = () => {
-    const [form, setForm] = useState<LoginFormState>({ email: '', password: '' });
     const navigate = useNavigate();
+
+    // const token = localStorage.getItem("token");
+
+    // if (token) {
+    //     navigate('/');
+    // }
+
+    const [form, setForm] = useState<LoginFormState>({ email: '', password: '' });
 
     const { login } = useAuth();
     const { setMessage } = useMessage();
@@ -43,7 +50,6 @@ const Login: React.FC = () => {
 
     return (
         <div className="flex h-screen">
-            {/* Lado da imagem */}
             <div
                 className="hidden md:flex w-1/2 bg-cover bg-center"
                 style={{ backgroundImage: "url('/mountain.jpg')" }}
@@ -54,7 +60,6 @@ const Login: React.FC = () => {
                 </div>
             </div>
 
-            {/* Lado do formulário */}
             <div className="flex w-full md:w-1/2 justify-center items-center bg-white">
                 <form onSubmit={handleSubmit} className="w-80">
                     <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>

@@ -1,3 +1,6 @@
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.classList.add(savedTheme);
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
@@ -18,14 +21,11 @@ import EditProfile from './components/EditProfile/index.tsx';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // seu layout principal
+    element: <App />,
     children: [
-      // públicas
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
 
-
-      // protegidas
       {
         path: "/EditProfile",
         element: (

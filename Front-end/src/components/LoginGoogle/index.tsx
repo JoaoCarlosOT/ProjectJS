@@ -1,4 +1,3 @@
-// components/GoogleLoginButton.tsx
 import { GoogleLogin } from '@react-oauth/google';
 import useAuth from '../../hooks/useAuth';
 
