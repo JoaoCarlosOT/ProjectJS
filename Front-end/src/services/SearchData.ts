@@ -3,14 +3,15 @@ import api from './api';
 
 const SearchData = async (query: string): Promise<Todo[]> => {
   try {
-    const response = await api.get<Todo[]>('/todos/search', {
-      params: { q: query }
+    const response = await api.post<Todo[]>('/todos/search', {
+      search: query, 
     });
 
     return response.data.map(item => ({
       id: item.id,
       title: item.title,
-      description: item.description
+      description: item.description,
+      imageUrl:item.imageUrl,
     }));
   } catch (error) {
     console.error('Erro ao buscar todos:', error);

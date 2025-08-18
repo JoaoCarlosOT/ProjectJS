@@ -29,9 +29,9 @@ const Header = () => {
         e.preventDefault();
 
         try {
-            const todos = await SearchData(search);
-            console.log(todos)
-            setTodos(todos);
+            const data = await SearchData(search);
+            console.log(data);
+            setTodos(data);
 
             setSearch("");
 
