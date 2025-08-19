@@ -52,7 +52,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const parsed = loginSchema.parse(req.body); // 🔹 Validação Zod
+    const parsed = loginSchema.parse(req.body);
     const { email, password } = parsed;
 
     const user = await User.findOne({ where: { email } });
@@ -170,9 +170,6 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
       res.status(404).json({ message: 'Usuário não encontrado' });
       return;
     }
-
-    if (name) user.name = name;
-    if (file) user.profileImage = file.filename;
 
     await user.save();
 

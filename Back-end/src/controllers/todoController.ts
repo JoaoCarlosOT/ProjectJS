@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Todo } from '../models/todo';
 import { Op } from 'sequelize';
 import { todoSchema } from '../../schemas/todoSchema';
+import { Todos } from "../types/todo"
 
 export const getAllTodo = async (req: Request, res: Response): Promise<void> => {
   const userId = (req.user as any).id;
@@ -62,11 +63,14 @@ export const createTodo = async (req: Request, res: Response) => {
 export const updateTodo = async (req: Request, res: Response): Promise<void> => {
   try {
     const todo = await Todo.findByPk(req.params.id);
-    if (!todo) return res.status(404).json({ message: 'Tarefa não encontrada' });
-
+    if (!todo) {
+      res.status(404).json({ message: 'Tarefa não encontrada' });
+      return;
+    }
     const parsed = todoSchema.partial().safeParse(req.body);
     if (!parsed.success) {
-      return res.status(400).json({ errors: parsed.error.issues });
+      res.status(400).json({ errors: parsed.error.issues });
+      return;
     }
 
     Object.assign(todo, parsed.data);
