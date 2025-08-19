@@ -53,8 +53,8 @@ const Login: React.FC = () => {
                 style={{ backgroundImage: "url('/mountain.jpg')" }}
             >
                 <div className="flex flex-col justify-center items-center w-full bg-black/50 text-white p-8">
-                    <h1 className="text-4xl font-bold mb-4">Create your Account</h1>
-                    <p className="text-lg">Share your artwork and Get projects!</p>
+                    <h1 className="text-4xl font-bold mb-4">Organize suas Tarefas</h1>
+                    <p className="text-lg">Acompanhe e complete suas tarefas com facilidade!</p>
                 </div>
             </div>
 

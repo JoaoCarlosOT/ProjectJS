@@ -7,13 +7,13 @@ import { ThemeProvider } from './context/ThemeContext';
 import Sidebar from "./components/Sidebar";
 import { useContext } from "react";
 
-function AppLayout() {
+function AppLayoutContent() {
   const { authenticated } = useContext(AppContext);
 
   return (
     <>
       <div className={`${authenticated ? 'lg:pl-[260px]' : ''} min-h-screen overflow-y-auto h-[calc(100vh-64px)]`}>
-        <Header />
+        {authenticated && <Header />}
         <Message />
         <Outlet />
       </div>
@@ -22,16 +22,16 @@ function AppLayout() {
   );
 }
 
-function App() {
+function AppLayout() {
   return (
     <AppProvider>
       <ThemeProvider>
         <MessageProvider>
-          <AppLayout />
+          <AppLayoutContent />
         </MessageProvider>
       </ThemeProvider>
     </AppProvider>
   );
 }
 
-export default App;
+export default AppLayout;
