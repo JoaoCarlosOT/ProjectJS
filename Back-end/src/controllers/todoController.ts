@@ -19,7 +19,8 @@ export const searchTodos = async (req: Request, res: Response): Promise<void> =>
         userId,
         [Op.or]: [
           { title: { [Op.like]: `%${search}%` } },
-          { description: { [Op.like]: `%${search}%` } }
+          { description: { [Op.like]: `%${search}%` } },
+          { status: { [Op.like]: `%${search}%` } }
         ]
       }
     });
@@ -36,30 +37,6 @@ export const getTodoById = async (req: Request, res: Response): Promise<void> =>
   const todo = await Todo.findOne({ where: { id, userId } });
   todo ? res.json(todo) : res.status(404).json({ message: 'Todo não encontrado' });
 };
-
-// export const createTodo = async (req: Request, res: Response): Promise<Response> => {
-//   try {
-//     const parsed = todoSchema.safeParse(req.body);
-
-//     if (!parsed.success) {
-//       return res.status(400).json({ errors: parsed.error.issues });
-//     }
-
-//     const userId = (req.user as any).id;
-//     const filePath = req.file ? `/uploads/todo/${req.file.filename}` : null;
-
-//     const todo = await Todo.create({
-//       ...parsed.data,
-//       userId,
-//       imageUrl: filePath || parsed.data.imageUrl || null,
-//     });
-
-//     return res.status(201).json(todo);
-//   } catch (err) {
-//     return res.status(500).json({ message: 'Erro ao criar tarefa.' });
-//   }
-// };
-
 
 export const createTodo = async (req: Request, res: Response) => {
   try {

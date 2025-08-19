@@ -29,7 +29,7 @@ const Header = () => {
         e.preventDefault();
 
         try {
-            const data = await SearchData(search);
+            const data = await SearchData({ search });
             console.log(data);
             setTodos(data);
 

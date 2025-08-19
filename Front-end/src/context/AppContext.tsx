@@ -10,7 +10,7 @@ interface AppContextType {
     toggleFavorite: (todo: Todo) => void;
     isFavorite: (id: string | number) => boolean;
     todos: Todo[];
-    setTodos: (todos: Todo[]) => void;
+    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
     authenticated: boolean;
     setAuthenticated: (value: boolean) => void;
     user: User | null;

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { Doughnut } from "react-chartjs-2";
 import {
@@ -15,6 +15,13 @@ const COLORS = ["#f6f6f8", "#a1a8c4", "#262628"];
 
 const Sidebar = () => {
     const { authenticated, todoStats } = useContext(AppContext);
+
+    const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+    useEffect(() => {
+        const storedTheme = localStorage.getItem("theme");
+        if (storedTheme) setTheme(storedTheme);
+    }, []);
 
     if (!authenticated) return null;
 
@@ -45,7 +52,8 @@ const Sidebar = () => {
     return (
         <aside className="hidden lg:block fixed top-0 left-0 w-[180px] h-screen bg-card rounded-r-3xl p-6 flex flex-col justify-between shadow-lg z-40">
             <div>
-                <img src="/logoDarkJS.png" alt="Logo" className="w-50 h-15 mb-6" />
+                <img src={theme === "dark" ? "/logoWhiteJS.png" : "/logoDarkJS.png"} alt="Logo" className="w-50 h-15 mb-6" />
+
                 <nav className="flex flex-col gap-4 text-texto mb-6">
                     <Link
                         to="/"
