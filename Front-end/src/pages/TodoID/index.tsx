@@ -25,7 +25,7 @@ const TodoID = () => {
 
     const finalImageUrl = todo.imageUrl?.startsWith('http')
         ? todo.imageUrl
-        : `${import.meta.env.VITE_API_URL}${todo.imageUrl}`;
+        : `${import.meta.env.VITE_API_URL}/uploads/todo/${todo.imageUrl}`;
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md border border-gray-200 flex items-center justify-center flex-col">
