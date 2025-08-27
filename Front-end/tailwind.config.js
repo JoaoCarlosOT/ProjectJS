@@ -12,6 +12,7 @@ export default {
         card:'var(--card)',
         button:'var(--button)',
         outborder:'var(--outborder)',
+        inputColor:'var(--input)',
       },
       screens: {
         'xs': '400px',      

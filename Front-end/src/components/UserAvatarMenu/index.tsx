@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
@@ -14,6 +14,8 @@ const UserAvatarMenu = () => {
     const { logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
+    const filterRef = useRef<HTMLDivElement>(null);
+
     const imageUrl = user?.profileImage
         ? (user.profileImage.startsWith("http")
             ? user.profileImage
@@ -23,6 +25,30 @@ const UserAvatarMenu = () => {
 
 
     if (!user) return null;
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setOpen(false);
+            }
+        };
+
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("keydown", handleEsc);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleEsc);
+        };
+    }, [open]);
 
     return (
         <div className="relative">
@@ -47,18 +73,18 @@ const UserAvatarMenu = () => {
             </div>
 
             {open && (
-                <div className="absolute right-0 mt-2 w-56 bg-card  border rounded shadow-lg z-50">
+                <div ref={filterRef} className="absolute right-0 mt-2 w-56 bg-card  border rounded shadow-lg z-50">
                     <div className="p-4 text-texto">
                         <p className="font-semibold">{user.email}</p>
                     </div>
                     <hr />
 
-                    <Link to="/EditProfile" className="block px-4 py-2 text-texto hover:bg-slate-300">
+                    <Link to="/EditProfile" className="block px-4 py-2 text-texto hover:bg-background">
                         Editar Perfil
                     </Link>
 
                     <div
-                        className="block px-4 py-2 text-texto hover:bg-slate-300 cursor-pointer relative"
+                        className="block px-4 py-2 text-texto hover:bg-background cursor-pointer relative"
                         onClick={() => setThemeMenuOpen(prev => !prev)}
                     >
                         Tema
@@ -71,7 +97,7 @@ const UserAvatarMenu = () => {
                                         setThemeMenuOpen(false);
                                         setOpen(false);
                                     }}
-                                    className="flex items-center justify-between w-full px-4 py-2 hover:bg-slate-200 transition-colors"
+                                    className="flex items-center justify-between w-full px-4 py-2 hover:bg-background transition-colors"
                                 >
                                     <div className="flex items-center gap-2">
                                         <FaCloudSun className="w-5 h-5 text-yellow-500" />
@@ -89,7 +115,7 @@ const UserAvatarMenu = () => {
                                         setThemeMenuOpen(false);
                                         setOpen(false);
                                     }}
-                                    className="flex items-center justify-between w-full px-4 py-2 hover:bg-slate-200 transition-colors"
+                                    className="flex items-center justify-between w-full px-4 py-2 hover:bg-background transition-colors"
                                 >
                                     <div className="flex items-center gap-2">
                                         <BsFillCloudMoonFill className="w-5 h-5 text-button" />
@@ -104,12 +130,12 @@ const UserAvatarMenu = () => {
                         )}
                     </div>
 
-                    <button className="block w-full text-left px-4 py-2 text-texto hover:bg-slate-300">
+                    <button className="block w-full text-left px-4 py-2 text-texto hover:bg-background">
                         Atalhos
                     </button>
                     <button
                         onClick={logout}
-                        className="block w-full text-left px-4 py-2 text-texto hover:bg-slate-300"
+                        className="block w-full text-left px-4 py-2 text-texto hover:bg-background"
                     >
                         Fazer logout
                     </button>

@@ -17,6 +17,8 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const COLORS = ["#f6f6f8", "#a1a8c4", "#262628"];
+
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -53,7 +55,7 @@ const Header = () => {
                             <input
                                 type="text"
                                 id="search"
-                                className="w-full max-w-[500px] pl-10 pr-4 py-2 rounded-lg border-[2px] border-gray-400 text-gray-800 focus:outline-none"
+                                className="w-full max-w-[500px] pl-10 pr-4 py-2 rounded-lg border-[1px] bg-card border-gray-400 text-texto focus:outline-none"
                                 placeholder="Pesquisar"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -116,7 +118,7 @@ const Header = () => {
                                                 todoStats.emProgresso,
                                                 todoStats.finalizados,
                                             ],
-                                            backgroundColor: ["#f6f6f8", "#a1a8c4", "#262628"],
+                                            backgroundColor: COLORS,
                                             borderWidth: 0,
                                         },
                                     ],

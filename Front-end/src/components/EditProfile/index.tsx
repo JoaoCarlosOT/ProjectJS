@@ -69,7 +69,7 @@ const EditProfile = () => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-            <div ref={modalRef} className="bg-white p-6 rounded-xl w-full max-w-md shadow-lg relative">
+            <div ref={modalRef} className="bg-background p-6 rounded-xl w-full max-w-md shadow-lg relative">
                 <h2 className="text-xl font-semibold mb-4">Editar Perfil</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -78,7 +78,7 @@ const EditProfile = () => {
                             type="text"
                             value={name}
                             onChange={e => setName(e.target.value)}
-                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
+                            className="w-full bg-card px-3 py-2 border rounded focus:outline-none"
                         />
                     </div>
 
@@ -121,7 +121,7 @@ const EditProfile = () => {
                         <button
                             type="button"
                             onClick={() => window.history.back()}
-                            className="px-4 py-2 border rounded hover:bg-gray-100"
+                            className="px-4 py-2 border rounded"
                         >
                             Cancelar
                         </button>

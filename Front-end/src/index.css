@@ -16,6 +16,7 @@ body {
     --background: #f4f7fc;
     --button: #3e4c69;
     --outborder: #21262a;
+    --input: #ffffff;
 }
 
 .dark {
@@ -24,6 +25,7 @@ body {
     --background: #1d2125;
     --button: #0072FF;
     --outborder: #21262a;
+    --input: #282d33;
 }
 
 @layer utilities {

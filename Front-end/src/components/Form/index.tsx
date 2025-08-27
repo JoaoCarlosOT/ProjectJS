@@ -90,28 +90,28 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
 
     return (
         <form
-            className="max-w-md w-full mx-auto mt-20 p-6 bg-white rounded-2xl shadow-md space-y-4"
+            className="max-w-md w-full mx-auto mt-20 p-6 bg-card text-texto rounded-2xl shadow-md space-y-4"
             onSubmit={handleSubmit}
             encType="multipart/form-data"
         >
             <div className="flex flex-col">
-                <label className="mb-1 text-sm font-medium text-gray-700">Título</label>
+                <label className="mb-1 text-sm font-medium">Título</label>
                 <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                    className="px-4 py-2 border bg-card border-gray-300 rounded-lg"
                 />
                 {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
             </div>
 
             <div className="flex flex-col">
-                <label className="mb-1 text-sm font-medium text-gray-700">Descrição</label>
+                <label className="mb-1 text-sm font-medium">Descrição</label>
                 <input
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                    className="px-4 py-2 border bg-card border-gray-300 rounded-lg"
                 />
                 {errors.description && (
                     <p className="text-red-500 text-sm">{errors.description}</p>
@@ -119,13 +119,13 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
             </div>
 
             <div className="flex flex-col">
-                <label className="mb-1 text-sm font-medium text-gray-700">Status</label>
+                <label className="mb-1 text-sm font-medium">Status</label>
                 <select
                     value={status}
                     onChange={(e) =>
                         setStatus(e.target.value as "a_fazer" | "em_progresso" | "finalizado")
                     }
-                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                    className="px-4 py-2 border bg-card border-gray-300 rounded-lg"
                 >
                     <option value="a_fazer">A Fazer</option>
                     <option value="em_progresso">Em Progresso</option>
@@ -134,7 +134,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
             </div>
 
             <div className="flex flex-col">
-                <label className="mb-1 text-sm font-medium text-gray-700">
+                <label className="mb-1 text-sm font-medium">
                     Imagem (opcional)
                 </label>
                 <input
