@@ -131,7 +131,7 @@ npm run dev           # Inicia o app React (porta 5173)
 * nodemailer
 * MVC
 * API Restfull
-*
+* zod
 
 ### 🐳 Infra
 
