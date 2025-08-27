@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { Todo } from '../models/todo';
 import { Op } from 'sequelize';
 import { todoSchema } from '../../schemas/todoSchema';
-import { Todos } from "../types/todo"
+import fs from 'fs';
+import path from 'path';
 
 export const getAllTodo = async (req: Request, res: Response): Promise<void> => {
   const userId = (req.user as any).id;
@@ -44,45 +45,64 @@ export const createTodo = async (req: Request, res: Response) => {
     const { title, description, status } = req.body;
     const userId = (req.user as any).id;
 
-    const filePath = req.file ? `/uploads/todo/${req.file.filename}` : null;
+    if (!req.file) {
+      res.status(400).json({ message: 'Imagem da tarefa é obrigatória' });
+      return;
+    }
 
     const todo = await Todo.create({
       title,
       description,
       status,
       userId,
-      imageUrl: filePath,
+      imageUrl: req.file.filename, 
     });
 
     res.status(201).json(todo);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Erro ao criar tarefa.' });
   }
 };
 
 export const updateTodo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const todo = await Todo.findByPk(req.params.id);
+    const userId = (req.user as any).id;
+    const { id } = req.params;
+
+    const todo = await Todo.findOne({ where: { id, userId } });
+
     if (!todo) {
-      res.status(404).json({ message: 'Tarefa não encontrada' });
+      res.status(404).json({ message: "Tarefa não encontrada" });
       return;
     }
+
     const parsed = todoSchema.partial().safeParse(req.body);
     if (!parsed.success) {
       res.status(400).json({ errors: parsed.error.issues });
       return;
     }
 
-    Object.assign(todo, parsed.data);
+    if (parsed.data.title) todo.title = parsed.data.title;
+    if (parsed.data.description) todo.description = parsed.data.description;
+    if (parsed.data.status) todo.status = parsed.data.status;
 
     if (req.file) {
-      todo.imageUrl = `/uploads/todo/${req.file.filename}`;
+      if (todo.imageUrl) {
+        const oldPath = path.join(__dirname, `../uploads/todo/${todo.imageUrl}`);
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+
+      todo.imageUrl = req.file.filename;
     }
 
     await todo.save();
-    res.json(todo);
+    res.json({ message: "Tarefa atualizada com sucesso", todo });
   } catch (err) {
-    res.status(500).json({ message: 'Erro ao atualizar tarefa.' });
+    console.error(err);
+    res.status(500).json({ message: "Erro ao atualizar tarefa." });
   }
 };
 
@@ -90,9 +110,17 @@ export const deleteTodo = async (req: Request, res: Response): Promise<void> => 
   const userId = (req.user as any).id;
   const { id } = req.params;
   const todo = await Todo.findOne({ where: { id, userId } });
+
   if (todo) {
+    if (todo.imageUrl) {
+      const oldPath = path.join(__dirname, `../uploads/todo/${todo.imageUrl}`);
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
+      }
+    }
+
     await todo.destroy();
-    res.json({ message: 'Todo deletado' });
+    res.json({ message: 'Todo deletado com sucesso' });
   } else {
     res.status(404).json({ message: 'Todo não encontrado' });
   }

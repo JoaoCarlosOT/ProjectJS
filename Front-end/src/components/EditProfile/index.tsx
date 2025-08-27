@@ -65,7 +65,7 @@ const EditProfile = () => {
 
     const currentImageUrl = user?.profileImage?.startsWith('http')
         ? user.profileImage
-        : `${import.meta.env.VITE_API_URL}/uploads/${user?.profileImage}`;
+        : `${import.meta.env.VITE_API_URL}/uploads/user/${user?.profileImage}`;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">

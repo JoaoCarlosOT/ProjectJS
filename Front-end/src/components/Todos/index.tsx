@@ -23,7 +23,7 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     const finalImageUrl = imageUrl
         ? (imageUrl.startsWith("http")
             ? imageUrl
-            : `${import.meta.env.VITE_API_URL}${imageUrl}`)
+            : `${import.meta.env.VITE_API_URL}/uploads/todo/${imageUrl}`)
         : "/defaultTodo.jpg";
 
     const handleDelete = async (id: string) => {

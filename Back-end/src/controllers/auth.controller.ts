@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 import { sendWelcomeEmail } from '../services/sendEmail'; 
 import { registerSchema, loginSchema, updateProfileSchema } from "../../schemas/userSchema";
+import fs from 'fs';
+import path from 'path';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -171,15 +173,25 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
+    if (name) user.name = name;
+
+    if (file) {
+      if (user.profileImage) {
+        const oldPath = path.join(__dirname, `../uploads/user/${user.profileImage}`);
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+
+      user.profileImage = file.filename;
+    }
+
     await user.save();
 
     res.json({ message: 'Perfil atualizado com sucesso', user });
   } catch (error: any) {
-    if (error.errors) {
-      res.status(400).json({ message: error.errors.map((e: any) => e.message) });
-    } else {
-      console.error('Erro ao atualizar perfil:', error);
-      res.status(500).json({ message: 'Erro ao atualizar perfil' });
-    }
+    console.error('Erro ao atualizar perfil:', error);
+    res.status(500).json({ message: 'Erro ao atualizar perfil' });
   }
 };
+

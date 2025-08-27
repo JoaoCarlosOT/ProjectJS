@@ -30,7 +30,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
             const isFullUrl = initialData.imageUrl.startsWith("http");
             const fullUrl = isFullUrl
                 ? initialData.imageUrl
-                : `${import.meta.env.VITE_API_URL}${initialData.imageUrl}`;
+                : `${import.meta.env.VITE_API_URL}/uploads/todo/${initialData.imageUrl}`;
             setPreviewUrl(fullUrl);
         }
     }, [initialData]);
@@ -66,7 +66,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
             formData.append("title", title);
             formData.append("description", description);
             formData.append("status", status);
-            if (file) formData.append("file", file);
+            if (file) formData.append("profileImage", file);
 
             let res;
             if (isEditing && initialData?.id) {
