@@ -19,8 +19,8 @@
 ## 🎨 Layout
 
 <p align="center">     
-  <img src="./assets/layout_home.png" alt="Tela Home" width="400px">  
-  <img src="./assets/layout_login.png" alt="Tela Login" width="400px"> 
+  <img src="./assets/layout-home.png" alt="Tela Home" width="400px">  
+  <img src="./assets/layout-login.png" alt="Tela Login" width="400px"> 
 </p>
 
 ---
@@ -143,7 +143,7 @@ npm run dev           # Inicia o app React (porta 5173)
 ## 📁 Estrutura do Projeto
 
 ```
-task-manager/
+ProjectJS/
 ├── Back-end/              # Aplicação Frontend
 ├── Front-end/              # API Backend
 ├── docker-compose.yml   # Configuração do back-end e banco de dados
