@@ -78,7 +78,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-const GOOGLE_CLIENT_id = import.meta.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_id = import.meta.env.VITE_GOOGLE_CLIENT_ID;;
 
 
 createRoot(document.getElementById('root')!).render(
