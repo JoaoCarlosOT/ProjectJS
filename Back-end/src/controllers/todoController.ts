@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Todo } from '../models/todo';
 import { Op } from 'sequelize';
-import { todoSchema } from '../../schemas/todoSchema';
+import { todoSchema } from '../schemas/todoSchema';
 import fs from 'fs';
 import path from 'path';
 

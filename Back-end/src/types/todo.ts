@@ -1,8 +1,6 @@
-// export interface Todos {
-//   id: number;
-//   title: string;
-//   description: string;
-//   status: string;
-//   userId: number;
-//   imageUrl?: string | null;
-// }
+export interface Todos {
+  title: string;
+  description: string;
+  status: string;
+  imageUrl?: string | null;
+}

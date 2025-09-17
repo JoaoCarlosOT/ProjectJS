@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 import { sendWelcomeEmail } from '../services/sendEmail'; 
-import { registerSchema, loginSchema, updateProfileSchema } from "../../schemas/userSchema";
+import { registerSchema, loginSchema, updateProfileSchema } from "../schemas/userSchema";
 import fs from 'fs';
 import path from 'path';
 
@@ -27,6 +27,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       email,
       password: hash,
       profileImage: file.filename,
+      provider: "local",
     });
 
     if (user) {
@@ -60,30 +61,37 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      res.status(400).json({ message: 'Usuário não encontrado' });
+      res.status(400).json({ message: "Usuário não encontrado" });
       return;
     }
 
-    const match = await bcrypt.compare(password, user.getDataValue('password'));
+    if (!user.password) {
+      res.status(400).json({ message: "Senha não cadastrada" });
+      return;
+    }
+
+    const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-      res.status(400).json({ message: 'Senha inválida' });
+      res.status(400).json({ message: "Senha inválida" });
       return;
     }
 
     const token = jwt.sign(
-      { id: user.getDataValue('id'), email },
-      process.env.JWT_SECRET || '',
-      { expiresIn: '1h' }
+      { id: user.id, email },
+      process.env.JWT_SECRET || "",
+      { expiresIn: "1h" }
     );
 
-    res.json({ message: 'Logado com sucesso', token });
+    res.json({ message: "Logado com sucesso", token });
   } catch (error: any) {
     if (error.errors) {
-      res.status(400).json({ message: error.errors.map((e: any) => e.message) });
+      res
+        .status(400)
+        .json({ message: error.errors.map((e: any) => e.message) });
     } else {
       console.error("Erro ao fazer login:", error);
-      res.status(400).json({ message: 'Erro ao fazer login' });
+      res.status(400).json({ message: "Erro ao fazer login" });
     }
   }
 };
@@ -118,9 +126,10 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
     if (!user) {
       user = await User.create({
         email,
-        password: '',
+        password: "",
         profileImage: picture,
         name,
+        provider: "google",
       });
       
       if (user) {
@@ -194,4 +203,3 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
     res.status(500).json({ message: 'Erro ao atualizar perfil' });
   }
 };
-
