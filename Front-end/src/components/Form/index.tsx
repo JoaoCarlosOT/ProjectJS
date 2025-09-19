@@ -79,7 +79,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
                 });
             }
 
-            const msg = res.data.message || (isEditing ? "Atualizado!" : "Cadastrado!");
+            const msg = (res.data as any)?.message || (isEditing ? "Atualizado!" : "Cadastrado!");
             setMessage({ type: "success", text: msg });
             navigate("/");
         } catch (error: any) {

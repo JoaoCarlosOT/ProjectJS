@@ -54,8 +54,8 @@ const EditProfile = () => {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 
-            setUser(res.data.user);
-            setMessage({ type: 'success', text: res.data.message || 'Perfil atualizado com sucesso!' });
+            setUser((res.data as any)?.user);
+            setMessage({ type: 'success', text: (res.data as any)?.message || 'Perfil atualizado com sucesso!' });
             window.history.back();
         } catch (err: any) {
             const msg = err.response?.data?.message || 'Erro ao atualizar perfil';

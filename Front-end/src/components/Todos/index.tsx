@@ -29,7 +29,7 @@ const Todos = ({ Todo, onDelete, mostrarAcoes = true }: Props) => {
     const handleDelete = async (id: string) => {
         try {
             const res = await api.delete(`/todos/${id}`);
-            setMessage({ type: "success", text: res.data.message || "Deletado com sucesso!" });
+            setMessage({ type: "success", text: (res.data as any)?.message || "Deletado com sucesso!" });
             onDelete(id);
         } catch (error: any) {
             const msg = error.response?.data?.message || "Erro ao deletar";
