@@ -12,7 +12,7 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', todoRoutes)
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5432;
 
 app.listen(PORT, async ()=>{
     await sequelize.sync();
