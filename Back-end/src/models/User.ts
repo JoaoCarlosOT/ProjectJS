@@ -19,7 +19,6 @@ export class User
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {
-
   declare id: number;
   declare name?: string | null;
   declare email: string;
