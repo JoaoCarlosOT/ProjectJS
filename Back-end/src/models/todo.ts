@@ -1,4 +1,3 @@
-// src/models/Todo.ts
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/database";
 import { User } from "./User";
@@ -33,7 +32,7 @@ Todo.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     title: { type: DataTypes.STRING, unique: true, allowNull: false },
-    description: { type: DataTypes.TEXT, allowNull: false },
+    description: { type: DataTypes.TEXT, allowNull: true }, 
     imageUrl: { type: DataTypes.STRING, allowNull: true },
     userId: { type: DataTypes.INTEGER, allowNull: false },
     status: {

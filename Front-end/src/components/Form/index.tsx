@@ -30,7 +30,7 @@ const Form = ({ initialData, isEditing = false }: FormProps) => {
             const isFullUrl = initialData.imageUrl.startsWith("http");
             const fullUrl = isFullUrl
                 ? initialData.imageUrl
-                : `${import.meta.env.VITE_API_URL}/uploads/todo/${initialData.imageUrl}`;
+                : `${import.meta.env.VITE_S3_URL}/${initialData.imageUrl}`;
             setPreviewUrl(fullUrl);
         }
     }, [initialData]);
