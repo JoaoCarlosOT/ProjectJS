@@ -1,4 +1,3 @@
-// src/models/Todo.ts
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/database";
 import { User } from "./User";

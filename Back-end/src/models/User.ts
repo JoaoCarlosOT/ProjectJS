@@ -1,4 +1,3 @@
-// src/models/User.ts
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/database";
 
@@ -20,7 +19,7 @@ export class User
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {
-  // use `declare` — não gera código, só informa o TS
+
   declare id: number;
   declare name?: string | null;
   declare email: string;

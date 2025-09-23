@@ -3,10 +3,10 @@ import { User } from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
-import { sendWelcomeEmail } from '../services/sendEmail'; 
+import { sendWelcomeEmail } from '../services/sendEmail';
 import { registerSchema, loginSchema, updateProfileSchema } from "../schemas/userSchema";
-import fs from 'fs';
-import path from 'path';
+import { uploadToS3, s3, getSignedImageUrl } from "../middleware/upload";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -14,41 +14,46 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const parsed = registerSchema.parse(req.body);
     const { name, email, password } = parsed;
-    const file = req.file;
 
-    if (!file) {
+    if (!req.file) {
       res.status(400).json({ message: 'Imagem de perfil é obrigatória' });
       return;
     }
+
+    const profileImageKey = await uploadToS3(req);
 
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
       email,
       password: hash,
-      profileImage: file.filename,
+      profileImage: profileImageKey,
       provider: "local",
     });
 
     if (user) {
-      sendWelcomeEmail(email).catch((err) => {
-        console.error("Erro ao enviar e-mail de boas-vindas:", err);
-      });
+      sendWelcomeEmail(email).catch(err =>
+        console.error("Erro ao enviar e-mail de boas-vindas:", err)
+      );
     }
 
     const token = jwt.sign(
-      { id: user.getDataValue('id'), email },
-      process.env.JWT_SECRET || '',
-      { expiresIn: '1h' }
+      { id: user.getDataValue("id"), email },
+      process.env.JWT_SECRET || "",
+      { expiresIn: "1h" }
     );
 
-    res.status(201).json({ token, user });
+    const signedUrl = user.profileImage
+      ? await getSignedImageUrl(user.profileImage)
+      : null;
+
+    res.status(201).json({ token, user: { ...user.toJSON(), profileImage: signedUrl } });
   } catch (error: any) {
     if (error.errors) {
       res.status(400).json({ message: error.errors.map((e: any) => e.message) });
     } else {
       console.error("Erro ao criar usuário:", error);
-      res.status(400).json({ message: 'Erro ao criar usuário' });
+      res.status(400).json({ message: "Erro ao criar usuário" });
     }
   }
 };
@@ -83,12 +88,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       { expiresIn: "1h" }
     );
 
-    res.json({ message: "Logado com sucesso", token });
+    const signedUrl = user.profileImage
+      ? await getSignedImageUrl(user.profileImage)
+      : null;
+
+    res.json({
+      message: "Logado com sucesso",
+      token,
+      user: { ...user.toJSON(), profileImage: signedUrl },
+    });
   } catch (error: any) {
     if (error.errors) {
-      res
-        .status(400)
-        .json({ message: error.errors.map((e: any) => e.message) });
+      res.status(400).json({ message: error.errors.map((e: any) => e.message) });
     } else {
       console.error("Erro ao fazer login:", error);
       res.status(400).json({ message: "Erro ao fazer login" });
@@ -100,7 +111,7 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
   const { token } = req.body;
 
   if (!token) {
-    res.status(400).json({ message: 'Token do Google não fornecido' });
+    res.status(400).json({ message: "Token do Google não fornecido" });
     return;
   }
 
@@ -113,13 +124,13 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
     const payload = ticket.getPayload();
 
     if (!payload || !payload.email) {
-      res.status(400).json({ message: 'Token inválido ou sem email' });
+      res.status(400).json({ message: "Token inválido ou sem email" });
       return;
     }
 
     const email = payload.email;
-    const name = payload.name || '';
-    const picture = payload.picture || '';
+    const name = payload.name || "";
+    const picture = payload.picture || "";
 
     let user = await User.findOne({ where: { email } });
 
@@ -127,28 +138,37 @@ export const loginWithGoogle = async (req: Request, res: Response): Promise<void
       user = await User.create({
         email,
         password: "",
-        profileImage: picture,
+        profileImage: picture.startsWith("http") ? picture : "",
         name,
         provider: "google",
       });
-      
+
       if (user) {
-        sendWelcomeEmail(email).catch((err) => {
-          console.error("Erro ao enviar e-mail de boas-vindas:", err);
-        });
+        sendWelcomeEmail(email).catch(err =>
+          console.error("Erro ao enviar e-mail de boas-vindas:", err)
+        );
       }
     }
 
     const yourToken = jwt.sign(
-      { id: user.getDataValue('id'), email },
-      process.env.JWT_SECRET || '',
-      { expiresIn: '1h' }
+      { id: user.getDataValue("id"), email },
+      process.env.JWT_SECRET || "",
+      { expiresIn: "1h" }
     );
 
-    res.json({ token: yourToken, user });
+    let signedUrl: string | null = null;
+    if (user.profileImage) {
+      if (user.provider === "google" && user.profileImage.startsWith("http")) {
+        signedUrl = user.profileImage; // já é URL pública
+      } else {
+        signedUrl = await getSignedImageUrl(user.profileImage);
+      }
+    }
+
+    res.json({ token: yourToken, user: { ...user.toJSON(), profileImage: signedUrl } });
   } catch (error) {
-    console.error('Erro ao verificar token do Google:', error);
-    res.status(401).json({ message: 'Token inválido' });
+    console.error("Erro ao verificar token do Google:", error);
+    res.status(401).json({ message: "Token inválido" });
   }
 };
 
@@ -157,14 +177,18 @@ export const home = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findByPk(req.user!.id);
 
     if (!user) {
-      res.status(404).json({ message: 'Usuário não encontrado' });
+      res.status(404).json({ message: "Usuário não encontrado" });
       return;
     }
 
-    res.json({ user });
+    const signedUrl = user.profileImage
+      ? await getSignedImageUrl(user.profileImage)
+      : null;
+
+    res.json({ user: { ...user.toJSON(), profileImage: signedUrl } });
   } catch (error) {
     console.error("Erro no /home:", error);
-    res.status(500).json({ message: 'Erro ao buscar usuário' });
+    res.status(500).json({ message: "Erro ao buscar usuário" });
   }
 };
 
@@ -173,33 +197,43 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
     const parsed = updateProfileSchema.parse(req.body);
     const userId = (req.user as any).id;
     const { name } = parsed;
-    const file = req.file;
 
     const user = await User.findByPk(userId);
 
     if (!user) {
-      res.status(404).json({ message: 'Usuário não encontrado' });
+      res.status(404).json({ message: "Usuário não encontrado" });
       return;
     }
 
     if (name) user.name = name;
 
-    if (file) {
-      if (user.profileImage) {
-        const oldPath = path.join(__dirname, `../uploads/user/${user.profileImage}`);
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
-        }
+    if (req.file) {
+      if (user.profileImage && !user.profileImage.startsWith("http")) {
+        await s3.send(
+          new DeleteObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME || "",
+            Key: user.profileImage,
+          })
+        );
       }
 
-      user.profileImage = file.filename;
+      user.profileImage = await uploadToS3(req); 
     }
 
     await user.save();
 
-    res.json({ message: 'Perfil atualizado com sucesso', user });
+    const signedUrl = user.profileImage
+      ? user.profileImage.startsWith("http")
+        ? user.profileImage
+        : await getSignedImageUrl(user.profileImage)
+      : null;
+
+    res.json({
+      message: "Perfil atualizado com sucesso",
+      user: { ...user.toJSON(), profileImage: signedUrl },
+    });
   } catch (error: any) {
-    console.error('Erro ao atualizar perfil:', error);
-    res.status(500).json({ message: 'Erro ao atualizar perfil' });
+    console.error("Erro ao atualizar perfil:", error);
+    res.status(500).json({ message: "Erro ao atualizar perfil" });
   }
 };

@@ -19,7 +19,7 @@ const UserAvatarMenu = () => {
     const imageUrl = user?.profileImage
         ? (user.profileImage.startsWith("http")
             ? user.profileImage
-            : `${import.meta.env.VITE_API_URL}/uploads/user/${user.profileImage}`)
+            : `${import.meta.env.VITE_S3_URL}/${user.profileImage}`)
         : "/images/defaultProfile.jpg";
 
     useEffect(() => {
