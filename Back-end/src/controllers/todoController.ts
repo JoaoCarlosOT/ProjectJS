@@ -9,7 +9,6 @@ export const getAllTodo = async (req: Request, res: Response): Promise<void> => 
   const userId = (req.user as any).id;
   const todos = await Todo.findAll({ where: { userId } });
 
-  // Mapeia cada todo e adiciona a URL assinada
   const todosWithSignedUrls = await Promise.all(
     todos.map(async (todo) => {
       const signedUrl = todo.imageUrl ? await getSignedImageUrl(todo.imageUrl) : null;
@@ -82,7 +81,7 @@ export const createTodo = async (req: Request, res: Response) => {
       return;
     }
 
-    const imageKey = await uploadToS3(req); // só a key
+    const imageKey = await uploadToS3(req); 
     const todo = await Todo.create({
       title,
       description,
@@ -98,16 +97,22 @@ export const createTodo = async (req: Request, res: Response) => {
   }
 };
 
-export const updateTodo = async (req: Request, res: Response) => {
+export const updateTodo = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req.user as any).id;
     const { id } = req.params;
 
     const todo = await Todo.findOne({ where: { id, userId } });
-    if (!todo) return res.status(404).json({ message: "Tarefa não encontrada" });
+    if (!todo) {
+      res.status(404).json({ message: "Tarefa não encontrada" });
+      return;
+    }
 
     const parsed = todoSchema.partial().safeParse(req.body);
-    if (!parsed.success) return res.status(400).json({ errors: parsed.error.issues });
+    if (!parsed.success) {
+      res.status(400).json({ errors: parsed.error.issues });
+      return;
+    }
 
     if (parsed.data.title) todo.title = parsed.data.title;
     if (parsed.data.description) todo.description = parsed.data.description;
@@ -115,14 +120,13 @@ export const updateTodo = async (req: Request, res: Response) => {
 
     if (req.file) {
       if (todo.imageUrl) {
-        // deleta a imagem antiga usando a key do S3
         await s3.send(new DeleteObjectCommand({
           Bucket: process.env.AWS_BUCKET_NAME || "",
           Key: todo.imageUrl,
         }));
       }
 
-      todo.imageUrl = await uploadToS3(req); // nova key
+      todo.imageUrl = await uploadToS3(req); 
     }
 
     await todo.save();
@@ -133,13 +137,16 @@ export const updateTodo = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteTodo = async (req: Request, res: Response) => {
+export const deleteTodo = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req.user as any).id;
     const { id } = req.params;
 
     const todo = await Todo.findOne({ where: { id, userId } });
-    if (!todo) return res.status(404).json({ message: 'Todo não encontrado' });
+    if (!todo) {
+      res.status(404).json({ message: 'Todo não encontrado' });
+      return;
+    }
 
     if (todo.imageUrl) {
       await s3.send(new DeleteObjectCommand({
