@@ -11,7 +11,7 @@ import SearchData from '../../services/SearchData';
 const Home = () => {
     const { todos, setTodos, loading, setLoading, favorites } = useContext(AppContext);
     const [open, setOpen] = useState(false);
-    const [search, setSearch] = useState<string>("");
+    const [_search, setSearch] = useState<string>("");
 
     const filterRef = useRef<HTMLDivElement>(null);
 
