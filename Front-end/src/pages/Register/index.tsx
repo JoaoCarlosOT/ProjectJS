@@ -5,6 +5,9 @@ import { useMessage } from '../../context/FlashMessageContext';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { registerSchema } from '../../schemas/userSchema';
+import { useTogglePassword } from "../../hooks/useChangeType";
+import { IoEyeSharp } from "react-icons/io5";
+import { FaEyeSlash } from "react-icons/fa";
 
 type RegisterFormState = z.infer<typeof registerSchema>;
 
@@ -17,6 +20,7 @@ const Register: React.FC = () => {
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormState | 'profileImage', string>>>({});
+    const { visible, toggle, inputType } = useTogglePassword();
 
     const { register } = useAuth();
     const { setMessage } = useMessage();
@@ -138,16 +142,23 @@ const Register: React.FC = () => {
                         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                     </div>
 
-                    <div className="mb-4">
+                    <div className="mb-4 relative">
                         <label className="block text-sm font-semibold mb-2">Senha</label>
                         <input
-                            type="password"
+                            type={inputType}
                             name="password"
                             value={form.password || ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
                             placeholder="Digite sua senha"
                         />
+                        <button
+                            type="button"
+                            onClick={toggle}
+                            className="absolute right-3 top-10 text-gray-500"
+                        >
+                            {visible ? <FaEyeSlash /> : <IoEyeSharp />}
+                        </button>
                         {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
                     </div>
 

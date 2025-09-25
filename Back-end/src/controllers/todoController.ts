@@ -76,10 +76,10 @@ export const createTodo = async (req: Request, res: Response) => {
     const { title, description, status } = req.body;
     const userId = (req.user as any).id;
 
-    if (!req.file) {
-      res.status(400).json({ message: 'Imagem da tarefa é obrigatória' });
-      return;
-    }
+    // if (!req.file) {
+    //   res.status(400).json({ message: 'Imagem da tarefa é obrigatória' });
+    //   return;
+    // }
 
     const imageKey = await uploadToS3(req); 
     const todo = await Todo.create({
