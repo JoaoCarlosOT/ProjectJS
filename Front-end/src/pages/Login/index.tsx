@@ -6,6 +6,9 @@ import GoogleLoginButton from '../../components/LoginGoogle';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { loginSchema } from '../../schemas/userSchema';
+import { useTogglePassword } from "../../hooks/useChangeType";
+import { IoEyeSharp } from "react-icons/io5";
+import { FaEyeSlash } from "react-icons/fa";
 
 type LoginFormState = z.infer<typeof loginSchema>;
 
@@ -13,6 +16,7 @@ const Login: React.FC = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState<LoginFormState>({ email: '', password: '' });
     const [errors, setErrors] = useState<Partial<Record<keyof LoginFormState, string>>>({});
+    const { visible, toggle, inputType } = useTogglePassword();
 
     const { login } = useAuth();
     const { setMessage } = useMessage();
@@ -75,16 +79,23 @@ const Login: React.FC = () => {
                         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-6 relative">
                         <label className="block text-sm font-semibold mb-2">Senha</label>
                         <input
-                            type="password"
+                            type={inputType}
                             name="password"
                             value={form.password}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-400"
                             placeholder="Digite sua senha"
                         />
+                        <button
+                            type="button"
+                            onClick={toggle}
+                            className="absolute right-3 top-10 text-gray-500"
+                        >
+                            {visible ? <FaEyeSlash /> : <IoEyeSharp />}
+                        </button>
                         {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
                     </div>
 

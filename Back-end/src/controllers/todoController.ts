@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Todo } from '../models/todo';
-import { Op } from 'sequelize';
+import { Op, fn, col, cast, where } from "sequelize";
 import { todoSchema } from '../schemas/todoSchema';
 import { uploadToS3, s3, getSignedImageUrl  } from "../middleware/upload";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
@@ -29,15 +29,15 @@ export const searchTodos = async (req: Request, res: Response): Promise<void> =>
 
   try {
     const todos = await Todo.findAll({
-      where: {
-        userId,
-        [Op.or]: [
-          { title: { [Op.like]: `%${search}%` } },
-          { description: { [Op.like]: `%${search}%` } },
-          { status: { [Op.like]: `%${search}%` } }
-        ]
-      }
-    });
+  where: {
+    userId,
+    [Op.or]: [
+      { title: { [Op.iLike]: `%${search}%` } },
+      { description: { [Op.iLike]: `%${search}%` } },
+      where(cast(col("status"), "TEXT"), { [Op.iLike]: `%${search}%` }),
+    ],
+  },
+});
 
     const todosWithSignedUrls = await Promise.all(
       todos.map(async (todo) => {
@@ -76,10 +76,10 @@ export const createTodo = async (req: Request, res: Response) => {
     const { title, description, status } = req.body;
     const userId = (req.user as any).id;
 
-    if (!req.file) {
-      res.status(400).json({ message: 'Imagem da tarefa é obrigatória' });
-      return;
-    }
+    // if (!req.file) {
+    //   res.status(400).json({ message: 'Imagem da tarefa é obrigatória' });
+    //   return;
+    // }
 
     const imageKey = await uploadToS3(req); 
     const todo = await Todo.create({

@@ -59,7 +59,7 @@ cd Projectjs
 docker-compose up -d
 ```
 
-> Isso iniciará o MySQL e deixará o banco acessível na porta `5432`.
+> Isso iniciará o PostgreSQL e deixará o banco acessível na porta `5432`.
 
 #### Setup automático (Recomendado)
 ```bash
@@ -127,7 +127,7 @@ npm run dev           # Inicia o app React (porta 5173)
 * MySQL
 * Sequelize
 * JWT e oauth (autenticação)
-* multer
+* multer e aws s3
 * nodemailer
 * MVC
 * API Restfull

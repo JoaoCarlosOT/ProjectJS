@@ -41,10 +41,11 @@ export default function useAuth() {
       setAuthenticated(true);
       const userRes = await api.get<{ user: User }>("/home");
       setUser(userRes.data.user);
+      console.log(userRes.data.user);
 
       navigate("/");
     } catch (error) {
-      console.error("Erro no login com Google:", error);
+      console.error("Erro no login com Google:", error);  
     }
   }
 
