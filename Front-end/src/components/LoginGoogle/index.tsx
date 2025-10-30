@@ -12,7 +12,7 @@ const GoogleLoginButton = () => {
                 }
             }}
             onError={() => {
-                console.error("Erro no login com Google");
+                console.error("Erro no login com Google",);
             }}
         />
     );

@@ -17,10 +17,10 @@ const UserAvatarMenu = () => {
     const filterRef = useRef<HTMLDivElement>(null);
 
     const imageUrl = user?.profileImage
-        ? (user.profileImage.startsWith("http")
+        ? (user.profileImage.startsWith("https")
             ? user.profileImage
-            : `${import.meta.env.VITE_S3_URL}/${user.profileImage}`)
-        : "/images/defaultProfile.jpg";
+            : user.profileImage)
+        : "/defaultProfile.jpg";
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {

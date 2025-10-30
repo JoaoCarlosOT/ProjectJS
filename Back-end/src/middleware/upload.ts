@@ -52,6 +52,10 @@ export const uploadToS3 = async (req: Request) => {
 };
 
 export const getSignedImageUrl = async (key: string, expiresInSeconds = 3600) => {
+  if (key.startsWith("http")) {
+    return key;
+  }
+
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME || "",
     Key: key,
@@ -60,3 +64,4 @@ export const getSignedImageUrl = async (key: string, expiresInSeconds = 3600) =>
   const url = await getSignedUrl(s3, command, { expiresIn: expiresInSeconds });
   return url;
 };
+
