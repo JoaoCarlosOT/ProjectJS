@@ -11,7 +11,7 @@
 <p align="center"><b>Gerencie suas tarefas com organização, filtros e favoritos.</b></p>  
 
 <p align="center">     
-  <a href="http://localhost:5173">📱 Acesse o projeto</a> 
+  <a href="https://taskyboard-psi.vercel.app/">📱 Acesse o projeto</a> 
 </p>
 
 ---
@@ -32,7 +32,7 @@ O projeto é dividido em duas partes:
 ### 📦 Aplicações
 
 * **`Front-end/`** – Frontend em React + Vite + Tailwind
-* **`Back-end/`** – Backend em Node.js + Express + MySQL
+* **`Back-end/`** – Backend em Node.js + Express + PostgreSQL
 
 ---
 
@@ -137,6 +137,7 @@ npm run dev           # Inicia o app React (porta 5173)
 
 * Docker
 * Docker Compose
+* aws(CloudWatch, SNS, IAM, S3)
 
 ---
 
@@ -166,6 +167,23 @@ ProjectJS/
 * dashboard para análise dos status das tarefas
 * Edição de sua conta
 * Pesquisar tarefas
+---
+
+## 🔐 Próximos passos:
+
+Finalizar MVP
+* Aprimorar UX, arquitetura, performance e segurança
+* Swagger
+* Testes Unitários
+* CI/CD com GitHub Actions
+* Grafana e Prometheus
+* terraform
+
+taskyboard 2.0
+* funcionalidades pra versão premium(Socket para tarefas compartilhadas em tempo real, criar quadros diferentes, cronometro, mostrar o clima de sua cidade, pomodoro, feedbacks, notificações, calendário, sugestões de melhora na rotina e assistente virtual com IA) 
+* gateway de pagamento para versão premium
+* Criar termos de privacidade e uso
+* WKWebView
 ---
 
 ## 🤝 Contribuindo <a id="contrib"></a>
